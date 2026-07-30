@@ -1,8 +1,10 @@
-# Mihir's Vendor Negotiator: Technical Documentation
+# SocialBridge AI: Technical Architecture & Explanations
 
-> **Purpose:** This document explains the technical architecture of the AI Vendor Negotiator. Use this to study and explain to judges exactly how the Agentic AI was built, what processes it follows, and how it handles complex negotiations.
+> **Purpose:** This document explains the technical architecture, processes, and custom AI engineering behind the SocialBridge platform. Use this as a study guide for hackathon presentations and technical questions from judges.
 
 ---
+
+## Part 1: Mihir's Work — AI Vendor Negotiator
 
 ## 1. Core Architecture: Agentic AI vs Traditional AI
 
