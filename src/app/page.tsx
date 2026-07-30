@@ -2,268 +2,469 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { 
   Brain, Layout, MapPin, Users, Store, Lightbulb, 
   ArrowRight, Play, Heart, Shield, Target, Zap,
-  Building, GraduationCap, Stethoscope, Briefcase, Landmark
+  Building, GraduationCap, Stethoscope, Briefcase, Landmark,
+  Globe, Sparkles, Rocket, CheckCircle2, Award, TrendingUp
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export default function LandingPage() {
   const [mounted, setMounted] = useState(false);
+  const { scrollYProgress } = useScroll();
+  const opacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
+  const scale = useTransform(scrollYProgress, [0, 0.2], [1, 0.9]);
 
   useEffect(() => {
     setMounted(true);
+    console.log("LandingPage mounted");
   }, []);
 
-  if (!mounted) return null;
+  if (!mounted) {
+    return <div className="min-h-screen bg-[#020617] flex items-center justify-center">
+      <div className="text-cyan-500 animate-pulse font-black tracking-tighter text-2xl">SOCIALBRIDGE</div>
+    </div>;
+  }
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-slate-950 text-slate-50 selection:bg-violet-500/30">
-      {/* Background Effects */}
-      <div className="fixed inset-0 z-0">
-        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-violet-600/20 blur-[120px]" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-teal-600/20 blur-[120px]" />
-        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-soft-light"></div>
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]"></div>
+    <div className="relative min-h-screen overflow-hidden bg-[#020617] text-slate-50 selection:bg-cyan-500/30">
+      {/* Dynamic Background */}
+      <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-cyan-600/20 blur-[120px] animate-pulse" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-indigo-600/20 blur-[120px] animate-pulse" style={{ animationDelay: '2s' }} />
+        <div className="absolute top-[20%] right-[10%] w-[30%] h-[30%] rounded-full bg-violet-600/10 blur-[100px]" />
+        
+        {/* Animated Grid */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-20"></div>
+        
+        {/* Border Beams for Hero Background Effect */}
+        <div className="absolute top-0 left-0 w-full h-full pointer-events-none opacity-20">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full border border-cyan-500/20 animate-[spin_20s_linear_infinite]"></div>
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full border border-indigo-500/20 animate-[spin_15s_linear_infinite_reverse]"></div>
+        </div>
+
+        {/* Noise overlay */}
+        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.03] mix-blend-overlay"></div>
       </div>
 
       {/* Navigation */}
-      <nav className="fixed top-0 w-full z-50 border-b border-white/10 bg-black/20 backdrop-blur-md">
-        <div className="container mx-auto px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="text-xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-teal-400">
-              SocialBridge
-            </span>
-            <span className="px-2 py-0.5 rounded-full bg-white/10 text-xs font-semibold border border-white/20">
-              AI
-            </span>
+      <nav className="fixed top-0 w-full z-50 border-b border-white/5 bg-slate-950/50 backdrop-blur-xl">
+        <div className="container mx-auto px-6 h-20 flex items-center justify-between">
+          <motion.div 
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="flex items-center gap-2 group cursor-pointer"
+          >
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-cyan-500/20 group-hover:scale-110 transition-transform">
+              <Globe className="w-6 h-6 text-white" />
+            </div>
+            <div className="flex flex-col">
+              <span className="text-xl font-black tracking-tighter text-white leading-none">
+                SOCIALBRIDGE
+              </span>
+              <span className="text-[10px] font-bold text-cyan-400 tracking-[0.2em]">AI PLATFORM</span>
+            </div>
+          </motion.div>
+
+          <div className="hidden lg:flex items-center gap-10 text-sm font-semibold text-slate-400">
+            {['Features', 'Solutions', 'Impact', 'Partners'].map((item) => (
+              <a key={item} href={`#${item.toLowerCase()}`} className="hover:text-cyan-400 transition-colors relative group">
+                {item}
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-cyan-400 transition-all group-hover:width-full"></span>
+              </a>
+            ))}
           </div>
-          <div className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
-            <a href="#features" className="hover:text-white transition-colors">Features</a>
-            <a href="#how-it-works" className="hover:text-white transition-colors">How It Works</a>
-            <a href="#impact" className="hover:text-white transition-colors">Impact</a>
-          </div>
-          <Link href="/dashboard" className="px-5 py-2 text-sm font-semibold text-white rounded-full bg-gradient-to-r from-violet-600 to-teal-600 hover:opacity-90 transition-opacity shadow-[0_0_20px_rgba(139,92,246,0.3)]">
-            Get Started
-          </Link>
+
+          <motion.div 
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="flex items-center gap-4"
+          >
+            <Link href="/auth/login" className="hidden sm:block text-sm font-bold text-slate-300 hover:text-white transition-colors">
+              Sign In
+            </Link>
+            <Link href="/auth/login" className="px-6 py-2.5 text-sm font-bold text-white rounded-full bg-gradient-to-r from-cyan-500 to-indigo-600 hover:shadow-[0_0_20px_rgba(6,182,212,0.4)] transition-all hover:-translate-y-0.5 active:scale-95">
+              Launch App
+            </Link>
+          </motion.div>
         </div>
       </nav>
 
-      <main className="relative z-10 pt-24">
+      <main className="relative z-10 pt-32">
         {/* Hero Section */}
-        <section className="relative min-h-[90vh] flex flex-col items-center justify-center px-6 py-20 text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-sm text-slate-300 mb-8 animate-[fade-in-up_1s_ease-out]">
-            <span className="w-2 h-2 rounded-full bg-teal-400 animate-pulse"></span>
-            Platform is live and scaling
-          </div>
+        <section className="relative min-h-[85vh] flex flex-col items-center justify-center px-6 text-center">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-xs font-bold text-cyan-400 mb-10 tracking-widest uppercase"
+          >
+            <Sparkles className="w-3.5 h-3.5" />
+            Next-Gen Civic Collaboration
+          </motion.div>
           
-          <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 max-w-4xl animate-[fade-in-up_1s_ease-out_0.2s_both]">
-            Transform Good Intentions Into <br/>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-fuchsia-400 to-teal-400">
-              Measurable Impact
+          <motion.h1 
+            style={{ opacity, scale }}
+            className="text-6xl md:text-8xl font-black tracking-tight mb-8 max-w-5xl bg-clip-text text-transparent bg-gradient-to-b from-white via-white to-slate-500"
+          >
+            Where AI Meets <br/>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-indigo-400 to-violet-400">
+              Social Change
             </span>
-          </h1>
+          </motion.h1>
           
-          <p className="text-lg md:text-xl text-slate-400 max-w-2xl mb-10 animate-[fade-in-up_1s_ease-out_0.4s_both]">
-            AI-powered platform connecting citizens, NGOs, schools, hospitals, and government to solve social problems through intelligent partnerships.
-          </p>
+          <motion.p 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4 }}
+            className="text-lg md:text-xl text-slate-400 max-w-2xl mb-12 leading-relaxed"
+          >
+            Empower your community with our AI-driven ecosystem. Connecting citizens, NGOs, and government to solve real-world problems through data-backed partnerships.
+          </motion.p>
           
-          <div className="flex flex-col sm:flex-row items-center gap-4 animate-[fade-in-up_1s_ease-out_0.6s_both]">
-            <Link href="/collaborate" className="w-full sm:w-auto px-8 py-4 text-base font-bold text-white rounded-full bg-gradient-to-r from-violet-600 to-teal-600 hover:opacity-90 transition-all hover:scale-105 shadow-[0_0_30px_rgba(139,92,246,0.5)] flex items-center justify-center gap-2">
-              Start Collaborating <ArrowRight className="w-5 h-5" />
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6 }}
+            className="flex flex-col sm:flex-row items-center gap-6"
+          >
+            <Link href="/auth/login" className="group relative w-full sm:w-auto px-10 py-5 text-base font-black text-white rounded-2xl bg-cyan-500 overflow-hidden transition-all hover:scale-105 active:scale-95 shadow-2xl shadow-cyan-500/25">
+              <div className="absolute inset-0 bg-gradient-to-r from-cyan-600 to-indigo-600 opacity-100 group-hover:opacity-0 transition-opacity"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-indigo-600 to-violet-600 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+              <span className="relative flex items-center justify-center gap-3">
+                Get Started Now <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </span>
             </Link>
-            <Link href="/dashboard" className="w-full sm:w-auto px-8 py-4 text-base font-bold text-slate-300 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-all flex items-center justify-center gap-2">
-              <Play className="w-5 h-5" /> Watch Demo
+            <Link href="/auth/login" className="w-full sm:w-auto px-10 py-5 text-base font-bold text-slate-300 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all flex items-center justify-center gap-3 backdrop-blur-md">
+              <Play className="w-5 h-5 text-cyan-400" /> View Roadmap
             </Link>
-          </div>
+          </motion.div>
 
-          <div className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 max-w-4xl mx-auto p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md animate-[fade-in-up_1s_ease-out_0.8s_both]">
-            {[
-              { label: 'Organizations', value: '500+' },
-              { label: 'Collaborations', value: '1,200+' },
-              { label: 'Lives Impacted', value: '50K+' },
-              { label: 'Success Rate', value: '98%' },
-            ].map((stat, i) => (
-              <div key={i} className="flex flex-col items-center">
-                <span className="text-3xl font-bold text-white mb-1">{stat.value}</span>
-                <span className="text-xs text-slate-400 uppercase tracking-wider font-semibold">{stat.label}</span>
+          {/* Floating Elements */}
+          <div className="absolute inset-0 pointer-events-none -z-10">
+            <motion.div 
+              animate={{ y: [0, -20, 0], rotate: [0, 5, 0] }}
+              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+              className="absolute top-1/4 left-10 p-4 rounded-2xl bg-slate-900/50 border border-cyan-500/20 backdrop-blur-md hidden xl:block shadow-2xl shadow-cyan-500/10"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center">
+                  <TrendingUp className="w-4 h-4 text-emerald-400" />
+                </div>
+                <div className="text-left">
+                  <div className="text-[10px] text-slate-500 font-bold uppercase tracking-tighter">Impact Score</div>
+                  <div className="text-sm font-black text-white">98.4% Accuracy</div>
+                </div>
+              </div>
+            </motion.div>
+
+            <motion.div 
+              animate={{ y: [0, 20, 0], rotate: [0, -5, 0] }}
+              transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+              className="absolute bottom-1/4 right-10 p-4 rounded-2xl bg-slate-900/50 border border-indigo-500/20 backdrop-blur-md hidden xl:block shadow-2xl shadow-indigo-500/10"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-cyan-500/20 flex items-center justify-center">
+                  <Brain className="w-4 h-4 text-cyan-400" />
+                </div>
+                <div className="text-left">
+                  <div className="text-[10px] text-slate-500 font-bold uppercase tracking-tighter">AI Engine</div>
+                  <div className="text-sm font-black text-white">Smart Match Active</div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* Stats Section with Glassmorphism */}
+        <section className="py-20">
+          <div className="container mx-auto px-6">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
+              {[
+                { label: 'Verified NGOs', value: '1.2K+', icon: Shield, color: 'text-cyan-400' },
+                { label: 'Total Funding', value: '$45M+', icon: Target, color: 'text-indigo-400' },
+                { label: 'Volunteers', value: '150K+', icon: Users, color: 'text-violet-400' },
+                { label: 'Projects Done', value: '8.5K+', icon: Award, color: 'text-emerald-400' },
+              ].map((stat, i) => (
+                <motion.div 
+                  key={i}
+                  whileHover={{ y: -5 }}
+                  className="p-8 rounded-[2rem] bg-slate-900/40 border border-white/5 backdrop-blur-xl relative group overflow-hidden"
+                >
+                  <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-white/5 to-transparent rounded-full -mr-12 -mt-12 group-hover:scale-150 transition-transform duration-700"></div>
+                  <stat.icon className={`w-8 h-8 ${stat.color} mb-6 opacity-80`} />
+                  <div className="text-4xl font-black text-white mb-2">{stat.value}</div>
+                  <div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">{stat.label}</div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Scrolling Ticker */}
+        <div className="py-12 border-y border-white/5 bg-slate-950/30 overflow-hidden">
+          <div className="flex animate-marquee whitespace-nowrap">
+            {[...Array(2)].map((_, i) => (
+              <div key={i} className="flex items-center gap-16 px-8">
+                {['MUNICIPALITY COMMAND', 'AI MATCHING', 'CIVIC TRACKER', 'IMPACT VERIFIER', 'NGO COLLAB', 'SMART GOVERNANCE'].map((text) => (
+                  <span key={text} className="text-4xl md:text-6xl font-black text-white/5 hover:text-cyan-500/20 transition-colors cursor-default select-none">
+                    {text}
+                  </span>
+                ))}
               </div>
             ))}
           </div>
+        </div>
+
+        {/* Features Grid - Modern Design */}
+        <section id="features" className="py-32 relative">
+          <div className="container mx-auto px-6">
+            <div className="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
+              <div className="max-w-2xl">
+                <div className="text-cyan-400 font-black text-xs tracking-[0.3em] uppercase mb-4">Core Capabilities</div>
+                <h2 className="text-4xl md:text-6xl font-black text-white">
+                  Intelligent Tools for <span className="text-slate-500">Global Impact.</span>
+                </h2>
+              </div>
+              <p className="text-slate-400 max-w-sm text-sm font-medium leading-relaxed">
+                Our platform leverages advanced AI models to bridge the gap between social needs and resource availability.
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {[
+                { 
+                  icon: Brain, 
+                  title: 'AI Partnership Engine', 
+                  desc: 'Proprietary matching algorithms that connect organizations based on synergy, capacity, and historical impact data.',
+                  gradient: 'from-cyan-500/20 to-indigo-500/20'
+                },
+                { 
+                  icon: Layout, 
+                  title: 'Governance Dashboard', 
+                  desc: 'A unified command center for municipalities to track civic issues, budget allocation, and infrastructure health in real-time.',
+                  gradient: 'from-indigo-500/20 to-violet-500/20'
+                },
+                { 
+                  icon: MapPin, 
+                  title: 'Hyper-Local Reporting', 
+                  desc: 'Precise civic issue reporting with AI-powered categorization and priority routing to the correct department.',
+                  gradient: 'from-violet-500/20 to-fuchsia-500/20'
+                },
+                { 
+                  icon: Users, 
+                  title: 'Resource Orchestration', 
+                  desc: 'Seamlessly coordinate volunteers and professionals. Match talent to tasks where they can make the most difference.',
+                  gradient: 'from-fuchsia-500/20 to-rose-500/20'
+                },
+                { 
+                  icon: Shield, 
+                  title: 'Verification Protocol', 
+                  desc: 'Multi-layer verification for NGOs and projects ensuring that funding and efforts reach legitimate social causes.',
+                  gradient: 'from-rose-500/20 to-orange-500/20'
+                },
+                { 
+                  icon: Zap, 
+                  title: 'Real-time Analytics', 
+                  desc: 'Instant visualization of social impact metrics. Transform raw data into actionable insights for stakeholders.',
+                  gradient: 'from-orange-500/20 to-cyan-500/20'
+                },
+              ].map((feature, i) => (
+                <motion.div 
+                  key={i}
+                  whileHover={{ scale: 1.02 }}
+                  className="group p-10 rounded-[2.5rem] bg-slate-900/50 border border-white/5 hover:border-cyan-500/50 transition-all duration-500"
+                >
+                  <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${feature.gradient} flex items-center justify-center mb-8 group-hover:scale-110 transition-transform`}>
+                    <feature.icon className="w-8 h-8 text-white" />
+                  </div>
+                  <h3 className="text-2xl font-black text-white mb-4">{feature.title}</h3>
+                  <p className="text-slate-400 text-sm leading-relaxed mb-8">{feature.desc}</p>
+                  <Link href="/auth/login" className="flex items-center gap-2 text-xs font-bold text-cyan-400 group-hover:gap-4 transition-all">
+                    LEARN MORE <ArrowRight className="w-4 h-4" />
+                  </Link>
+                </motion.div>
+              ))}
+            </div>
+          </div>
         </section>
 
-        {/* User Types Scroll */}
-        <section className="py-10 border-y border-white/10 bg-black/20">
-          <div className="container mx-auto px-6 mb-6 text-center">
-            <h3 className="text-sm uppercase tracking-widest text-slate-500 font-semibold">Built for Everyone</h3>
-          </div>
-          <div className="flex overflow-hidden relative w-full">
-            <div className="flex space-x-6 animate-[scroll_40s_linear_infinite] whitespace-nowrap px-4 w-max">
-              {/* Double up for seamless scrolling effect */}
-              {[...Array(2)].map((_, i) => (
-                <div key={i} className="flex space-x-6">
+        {/* Impact Visualizer Section */}
+        <section className="py-32 bg-slate-950/50 backdrop-blur-3xl relative overflow-hidden">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-cyan-500/5 blur-[150px] rounded-full pointer-events-none"></div>
+          <div className="container mx-auto px-6">
+            <div className="grid lg:grid-cols-2 gap-20 items-center">
+              <div>
+                <h2 className="text-5xl md:text-7xl font-black text-white mb-8 leading-[1.1]">
+                  Visualizing <br/>
+                  <span className="text-cyan-400">Social Synergy.</span>
+                </h2>
+                <div className="space-y-8">
                   {[
-                    { name: 'Citizens', icon: Users, color: 'text-blue-400' },
-                    { name: 'NGOs', icon: Heart, color: 'text-rose-400' },
-                    { name: 'Schools', icon: GraduationCap, color: 'text-yellow-400' },
-                    { name: 'Hospitals', icon: Stethoscope, color: 'text-emerald-400' },
-                    { name: 'Companies', icon: Building, color: 'text-indigo-400' },
-                    { name: 'Government', icon: Landmark, color: 'text-slate-400' },
-                    { name: 'Volunteers', icon: Zap, color: 'text-amber-400' },
-                    { name: 'Professionals', icon: Briefcase, color: 'text-teal-400' },
-                    { name: 'Students', icon: Lightbulb, color: 'text-violet-400' },
-                  ].map((type, j) => (
-                    <div key={j} className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm">
-                      <type.icon className={`w-4 h-4 ${type.color}`} />
-                      <span className="text-sm font-medium">{type.name}</span>
+                    { title: 'Data Integration', desc: 'Connecting diverse data streams from civic sensors to public reports.' },
+                    { title: 'Pattern Recognition', desc: 'AI identifies recurring social issues before they become crises.' },
+                    { title: 'Outcome Verification', desc: 'Blockchain-backed proof of impact for every dollar and hour spent.' },
+                  ].map((item, i) => (
+                    <div key={i} className="flex gap-6 group">
+                      <div className="flex-shrink-0 w-12 h-12 rounded-full border border-white/10 flex items-center justify-center text-cyan-400 font-black group-hover:bg-cyan-500 group-hover:text-white transition-colors">
+                        {i + 1}
+                      </div>
+                      <div>
+                        <h4 className="text-xl font-bold text-white mb-2">{item.title}</h4>
+                        <p className="text-slate-400 text-sm">{item.desc}</p>
+                      </div>
                     </div>
                   ))}
                 </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Features Section */}
-        <section id="features" className="py-24 relative">
-          <div className="container mx-auto px-6">
-            <div className="text-center mb-16">
-              <h2 className="text-4xl md:text-5xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-teal-400">
-                Powered by AI, Built for Impact
-              </h2>
-              <p className="text-slate-400 max-w-2xl mx-auto">Everything you need to orchestrate successful social initiatives from idea to execution.</p>
-            </div>
-
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[
-                { icon: Brain, title: 'AI Partnership Engine', desc: 'Find the perfect collaboration partners with AI scoring based on experience, reliability, and community ratings.' },
-                { icon: Layout, title: 'Smart Workspace', desc: 'AI-powered project management with auto-generated tasks, documents, and meeting summaries.' },
-                { icon: MapPin, title: 'Civic Issue Reporting', desc: 'Report community issues with photos and GPS. Track resolution in real-time.' },
-                { icon: Users, title: 'Volunteer Matching', desc: 'Connect professionals and volunteers with organizations that need their specific skills.' },
-                { icon: Store, title: 'Vendor Marketplace', desc: 'Find trusted vendors for events with AI-powered recommendations and reviews.' },
-                { icon: Lightbulb, title: 'Innovation Hub', desc: 'Engineering students solve real social problems with AI-assisted development and mentorship.' },
-              ].map((feature, i) => (
-                <div key={i} className="group relative p-8 rounded-3xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all duration-300 hover:-translate-y-2 hover:border-violet-500/50 hover:shadow-[0_0_30px_rgba(139,92,246,0.1)]">
-                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-violet-500/20 to-teal-500/20 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                    <feature.icon className="w-6 h-6 text-teal-400" />
-                  </div>
-                  <h3 className="text-xl font-bold text-white mb-3">{feature.title}</h3>
-                  <p className="text-slate-400 text-sm leading-relaxed">{feature.desc}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* How It Works Section */}
-        <section id="how-it-works" className="py-24 relative bg-black/30">
-          <div className="container mx-auto px-6">
-            <div className="text-center mb-20">
-              <h2 className="text-4xl font-bold mb-4">How It Works</h2>
-              <p className="text-slate-400 max-w-2xl mx-auto">From an idea to measurable community impact in 4 simple steps.</p>
-            </div>
-
-            <div className="relative">
-              {/* Connecting line */}
-              <div className="hidden md:block absolute top-8 left-0 w-full h-1 bg-gradient-to-r from-violet-600/30 via-teal-600/30 to-violet-600/30 rounded-full"></div>
+              </div>
               
-              <div className="grid md:grid-cols-4 gap-10">
-                {[
-                  { title: 'Describe Your Initiative', desc: 'Post what you want to achieve or the problem you want to solve.' },
-                  { title: 'AI Finds Partners', desc: 'Smart matching connects you with organizations that have a proven track record.' },
-                  { title: 'Collaborate Together', desc: 'Use our shared workspace with AI assistance to plan and execute.' },
-                  { title: 'Create Impact', desc: 'Track your results, verify outcomes, and grow your network.' },
-                ].map((step, i) => (
-                  <div key={i} className="relative z-10 flex flex-col items-center text-center">
-                    <div className="w-16 h-16 rounded-full bg-slate-900 border-2 border-violet-500 flex items-center justify-center mb-6 shadow-[0_0_20px_rgba(139,92,246,0.3)] text-xl font-bold text-transparent bg-clip-text bg-gradient-to-br from-violet-400 to-teal-400">
-                      {i + 1}
+              <div className="relative">
+                <div className="aspect-square rounded-[3rem] overflow-hidden bg-slate-900 border border-white/10 relative shadow-2xl shadow-cyan-500/10">
+                  {/* Mock UI/Visualization */}
+                  <div className="absolute inset-0 p-8 flex flex-col justify-between">
+                    <div className="flex justify-between items-start">
+                      <div className="p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
+                        <div className="text-[10px] text-slate-500 font-bold uppercase mb-1">Active Projects</div>
+                        <div className="text-2xl font-black text-white">2,842</div>
+                      </div>
+                      <div className="w-12 h-12 rounded-full bg-cyan-500 flex items-center justify-center animate-pulse">
+                        <Rocket className="w-6 h-6 text-white" />
+                      </div>
                     </div>
-                    <h3 className="text-lg font-bold text-white mb-2">{step.title}</h3>
-                    <p className="text-slate-400 text-sm">{step.desc}</p>
+                    
+                    <div className="flex gap-4 items-end">
+                      <div className="flex-1 h-32 bg-cyan-500/20 rounded-xl relative overflow-hidden">
+                        <motion.div 
+                          initial={{ height: 0 }}
+                          whileInView={{ height: '70%' }}
+                          className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-cyan-500 to-indigo-500"
+                        />
+                      </div>
+                      <div className="flex-1 h-48 bg-indigo-500/20 rounded-xl relative overflow-hidden">
+                        <motion.div 
+                          initial={{ height: 0 }}
+                          whileInView={{ height: '85%' }}
+                          transition={{ delay: 0.1 }}
+                          className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-indigo-500 to-violet-500"
+                        />
+                      </div>
+                      <div className="flex-1 h-40 bg-violet-500/20 rounded-xl relative overflow-hidden">
+                        <motion.div 
+                          initial={{ height: 0 }}
+                          whileInView={{ height: '60%' }}
+                          transition={{ delay: 0.2 }}
+                          className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-violet-500 to-fuchsia-500"
+                        />
+                      </div>
+                    </div>
                   </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Impact Section */}
-        <section id="impact" className="py-24">
-          <div className="container mx-auto px-6 text-center">
-            <h2 className="text-4xl font-bold mb-16 text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-emerald-400">
-              Real Impact, Real Numbers
-            </h2>
-            
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-              {[
-                { label: 'Events Organized', value: '200+', icon: Target },
-                { label: 'Partners Connected', value: '500+', icon: Users },
-                { label: 'Lives Impacted', value: '50,000+', icon: Heart },
-                { label: 'Cities Active', value: '25+', icon: MapPin },
-              ].map((stat, i) => (
-                <div key={i} className="p-6 rounded-3xl bg-gradient-to-b from-white/5 to-transparent border border-white/10 hover:border-teal-500/30 transition-colors">
-                  <stat.icon className="w-8 h-8 text-teal-400 mx-auto mb-4 opacity-80" />
-                  <div className="text-4xl md:text-5xl font-extrabold text-white mb-2">{stat.value}</div>
-                  <div className="text-sm font-medium text-slate-400 uppercase tracking-widest">{stat.label}</div>
+                  
+                  {/* Decorative blobs */}
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-cyan-500/30 blur-[80px] rounded-full"></div>
                 </div>
-              ))}
+              </div>
             </div>
           </div>
         </section>
 
-        {/* CTA Section */}
-        <section className="py-24">
+        {/* CTA Section - Ultra Modern */}
+        <section className="py-40">
           <div className="container mx-auto px-6">
-            <div className="relative rounded-3xl p-12 overflow-hidden text-center">
-              <div className="absolute inset-0 bg-gradient-to-br from-violet-600/20 via-slate-900 to-teal-600/20 border border-white/10 rounded-3xl backdrop-blur-md"></div>
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[80%] bg-violet-600/20 blur-[100px] rounded-full pointer-events-none"></div>
+            <motion.div 
+              whileHover={{ scale: 1.01 }}
+              className="relative rounded-[4rem] p-16 md:p-24 overflow-hidden border border-white/10 bg-gradient-to-br from-slate-900 to-slate-950 shadow-2xl shadow-cyan-500/5"
+            >
+              <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-cyan-500/10 blur-[120px] rounded-full -mr-80 -mt-80"></div>
+              <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-indigo-500/10 blur-[120px] rounded-full -ml-80 -mb-80"></div>
               
-              <div className="relative z-10 max-w-2xl mx-auto">
-                <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">Ready to Make a Difference?</h2>
-                <p className="text-lg text-slate-300 mb-10">
-                  Join SocialBridge AI and start creating measurable impact in your community today. Whether you're a citizen, NGO, or corporation, we have the tools you need.
+              <div className="relative z-10 max-w-3xl mx-auto text-center">
+                <h2 className="text-5xl md:text-8xl font-black text-white mb-10 tracking-tighter">
+                  Start Building <br/>
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-indigo-400 italic">Tomorrow, Today.</span>
+                </h2>
+                <p className="text-xl text-slate-400 mb-12 font-medium">
+                  Join the global network of change-makers using AI to create measurable, sustainable social impact. No registration fees, just results.
                 </p>
-                <Link href="/dashboard" className="inline-block px-10 py-5 text-lg font-bold text-white rounded-full bg-gradient-to-r from-violet-600 to-teal-600 hover:opacity-90 transition-all hover:scale-105 shadow-[0_0_40px_rgba(139,92,246,0.6)]">
-                  Get Started Free
-                </Link>
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+                  <Link href="/auth/login" className="w-full sm:w-auto px-12 py-6 text-lg font-black text-white rounded-2xl bg-white text-black hover:bg-cyan-400 transition-colors shadow-xl">
+                    CREATE ACCOUNT
+                  </Link>
+                  <Link href="/auth/login" className="w-full sm:w-auto px-12 py-6 text-lg font-bold text-white rounded-2xl border border-white/10 hover:bg-white/5 transition-all">
+                    CONTACT SALES
+                  </Link>
+                </div>
               </div>
-            </div>
+            </motion.div>
           </div>
         </section>
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-white/10 bg-slate-950 py-12 relative z-10">
-        <div className="container mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
-          <div className="flex items-center gap-2">
-            <span className="text-xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-teal-400">
-              SocialBridge
-            </span>
-            <span className="text-xs font-semibold text-slate-500">AI</span>
+      <footer className="border-t border-white/5 bg-[#020617] py-20 relative z-10">
+        <div className="container mx-auto px-6">
+          <div className="grid md:grid-cols-4 gap-12 mb-20">
+            <div className="col-span-2">
+              <div className="flex items-center gap-2 mb-8">
+                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-500 to-indigo-600 flex items-center justify-center">
+                  <Globe className="w-5 h-5 text-white" />
+                </div>
+                <span className="text-xl font-black tracking-tighter text-white">SOCIALBRIDGE AI</span>
+              </div>
+              <p className="text-slate-500 max-w-sm mb-8 leading-relaxed">
+                The world's first AI-powered platform designed specifically for civic engagement and cross-sector social collaboration.
+              </p>
+              <div className="flex gap-4">
+                {[1, 2, 3, 4].map(i => (
+                  <div key={i} className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:border-cyan-500 transition-colors cursor-pointer">
+                    <div className="w-4 h-4 bg-slate-500"></div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            
+            <div>
+              <h4 className="text-white font-bold mb-8">Platform</h4>
+              <ul className="space-y-4 text-sm text-slate-500">
+                <li><a href="#" className="hover:text-cyan-400 transition-colors">Partnership Engine</a></li>
+                <li><a href="#" className="hover:text-cyan-400 transition-colors">Municipality Dashboard</a></li>
+                <li><a href="#" className="hover:text-cyan-400 transition-colors">Civic Reporting</a></li>
+                <li><a href="#" className="hover:text-cyan-400 transition-colors">Pricing</a></li>
+              </ul>
+            </div>
+            
+            <div>
+              <h4 className="text-white font-bold mb-8">Company</h4>
+              <ul className="space-y-4 text-sm text-slate-500">
+                <li><a href="#" className="hover:text-cyan-400 transition-colors">About Us</a></li>
+                <li><a href="#" className="hover:text-cyan-400 transition-colors">Impact Report</a></li>
+                <li><a href="#" className="hover:text-cyan-400 transition-colors">Careers</a></li>
+                <li><a href="#" className="hover:text-cyan-400 transition-colors">Privacy Policy</a></li>
+              </ul>
+            </div>
           </div>
           
-          <div className="text-slate-500 text-sm flex items-center gap-1">
-            Made with <Heart className="w-4 h-4 text-rose-500" /> for social impact
-          </div>
-
-          <div className="flex gap-6 text-sm text-slate-400">
-            <a href="#" className="hover:text-white transition-colors">About</a>
-            <a href="#" className="hover:text-white transition-colors">Features</a>
-            <a href="#" className="hover:text-white transition-colors">Contact</a>
-            <a href="#" className="hover:text-white transition-colors">Privacy</a>
+          <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-bold text-slate-600 tracking-widest uppercase">
+            <p>© 2026 SOCIALBRIDGE AI. ALL RIGHTS RESERVED.</p>
+            <div className="flex items-center gap-1">
+              MADE WITH <Heart className="w-4 h-4 text-rose-500" /> FOR THE FUTURE
+            </div>
           </div>
         </div>
       </footer>
 
-      {/* Basic inline styles for animations that tailwind might not have by default */}
       <style dangerouslySetInnerHTML={{__html: `
-        @keyframes scroll {
+        @keyframes marquee {
           0% { transform: translateX(0); }
           100% { transform: translateX(-50%); }
         }
-        @keyframes fade-in-up {
-          0% { opacity: 0; transform: translateY(20px); }
-          100% { opacity: 1; transform: translateY(0); }
+        .animate-marquee {
+          display: flex;
+          width: 200%;
+          animation: marquee 30s linear infinite;
+        }
+        .animate-marquee:hover {
+          animation-play-state: paused;
         }
       `}} />
     </div>

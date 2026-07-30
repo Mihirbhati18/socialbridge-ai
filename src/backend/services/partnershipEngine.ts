@@ -1,5 +1,5 @@
-import { prisma } from '@/lib/prisma';
-import { generateText } from '@/lib/gemini';
+import { prisma } from '@/backend/lib/prisma';
+import { generateText } from '@/backend/lib/gemini';
 
 export interface ScoreBreakdown {
   historyScore: number;

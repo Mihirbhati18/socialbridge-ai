@@ -94,7 +94,11 @@ export default function OrganizationMap({ organizations, center = [19.076, 72.87
 
                   {onDraftOutreach && (
                     <Button 
-                      onClick={() => onDraftOutreach(org)}
+                      onClick={() => {
+                        setTimeout(() => {
+                          onDraftOutreach(org);
+                        }, 0);
+                      }}
                       className="w-full bg-indigo-600 hover:bg-indigo-700 text-white text-xs h-8"
                     >
                       ✨ Draft AI Outreach

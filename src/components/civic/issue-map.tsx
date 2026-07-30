@@ -60,7 +60,11 @@ export default function IssueMap({ issues, center = [19.076, 72.8777], zoom = 12
                     {issue.address}
                   </div>
                   <button 
-                    onClick={() => router.push(`/civic-issues/${issue.id}`)}
+                    onClick={() => {
+                      setTimeout(() => {
+                        router.push(`/civic-issues/${issue.id}`);
+                      }, 0);
+                    }}
                     className="w-full bg-orange-500 hover:bg-orange-600 text-white text-xs py-1.5 rounded transition-colors"
                   >
                     View Details
