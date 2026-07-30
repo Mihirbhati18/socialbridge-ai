@@ -8,7 +8,7 @@ export async function GET() {
         request: true,
         orgs: {
           include: {
-            organization: true,
+            org: true,
           },
         },
         _count: {

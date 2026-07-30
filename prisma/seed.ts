@@ -7,6 +7,9 @@ async function main() {
 
   // Clean up existing data to prevent unique constraint errors during seeding
   console.log('Cleaning up existing data...')
+  await prisma.agentLog.deleteMany()
+  await prisma.agentNegotiation.deleteMany()
+  await prisma.vendor.deleteMany()
   await prisma.notification.deleteMany()
   await prisma.issueUpdate.deleteMany()
   await prisma.civicIssue.deleteMany()
@@ -668,6 +671,156 @@ async function main() {
         status: 'ASSIGNED',
         comment: 'Sewer cleaning machine deployed.',
         updatedBy: arjunMehta.id
+      }
+    ]
+  })
+
+  // -----------------------------------------
+  // 8. Vendors
+  // -----------------------------------------
+  console.log('Seeding Vendors...')
+
+  await prisma.vendor.deleteMany()
+  await prisma.agentLog.deleteMany()
+  await prisma.agentNegotiation.deleteMany()
+
+  await prisma.vendor.createMany({
+    data: [
+      {
+        name: 'Sharma Caterers',
+        type: 'CATERER',
+        description: 'Specializing in large-scale event catering with vegetarian and non-vegetarian options. 15+ years of experience.',
+        phone: '+91-9876543210',
+        email: 'sharma.caterers@example.com',
+        address: 'Andheri West',
+        city: 'Mumbai',
+        state: 'Maharashtra',
+        basePrice: 150,
+        minDiscount: 5,
+        maxDiscount: 25,
+        rating: 4.6,
+        totalOrders: 340,
+        socialOrders: 45,
+        verified: true
+      },
+      {
+        name: 'Mumbai Tent House',
+        type: 'DECORATOR',
+        description: 'Premium tent and decoration services. Chairs, tables, stages, lighting, and pandals for all types of events.',
+        phone: '+91-9876543211',
+        email: 'mumbai.tenthouse@example.com',
+        address: 'Dadar West',
+        city: 'Mumbai',
+        state: 'Maharashtra',
+        basePrice: 20,
+        minDiscount: 10,
+        maxDiscount: 35,
+        rating: 4.3,
+        totalOrders: 520,
+        socialOrders: 88,
+        verified: true
+      },
+      {
+        name: 'Royal Decorators',
+        type: 'DECORATOR',
+        description: 'Budget-friendly decoration and furniture rental. Specializes in community events and school functions.',
+        phone: '+91-9876543212',
+        email: 'royal.decorators@example.com',
+        address: 'Malad East',
+        city: 'Mumbai',
+        state: 'Maharashtra',
+        basePrice: 15,
+        minDiscount: 8,
+        maxDiscount: 30,
+        rating: 4.1,
+        totalOrders: 280,
+        socialOrders: 65,
+        verified: true
+      },
+      {
+        name: 'City Express Transport',
+        type: 'TRANSPORT',
+        description: 'Fleet of buses, tempo travelers, and trucks for volunteer transport and material logistics.',
+        phone: '+91-9876543213',
+        email: 'cityexpress@example.com',
+        address: 'Kurla West',
+        city: 'Mumbai',
+        state: 'Maharashtra',
+        basePrice: 3000,
+        minDiscount: 5,
+        maxDiscount: 20,
+        rating: 4.4,
+        totalOrders: 190,
+        socialOrders: 30,
+        verified: true
+      },
+      {
+        name: 'PrintMax Solutions',
+        type: 'PRINTER',
+        description: 'High-quality banner printing, t-shirts, ID cards, flyers, and promotional material.',
+        phone: '+91-9876543214',
+        email: 'printmax@example.com',
+        address: 'Lower Parel',
+        city: 'Mumbai',
+        state: 'Maharashtra',
+        basePrice: 50,
+        minDiscount: 10,
+        maxDiscount: 40,
+        rating: 4.5,
+        totalOrders: 410,
+        socialOrders: 120,
+        verified: true
+      },
+      {
+        name: 'Annapurna Foods',
+        type: 'CATERER',
+        description: 'Pure vegetarian catering with focus on healthy, hygienic meals for community events.',
+        phone: '+91-9876543215',
+        email: 'annapurna@example.com',
+        address: 'Borivali West',
+        city: 'Mumbai',
+        state: 'Maharashtra',
+        basePrice: 120,
+        minDiscount: 10,
+        maxDiscount: 30,
+        rating: 4.7,
+        totalOrders: 260,
+        socialOrders: 78,
+        verified: true
+      },
+      {
+        name: 'GreenWheels Logistics',
+        type: 'TRANSPORT',
+        description: 'Eco-friendly electric vehicle fleet for sustainable event logistics.',
+        phone: '+91-9876543216',
+        email: 'greenwheels@example.com',
+        address: 'Powai',
+        city: 'Mumbai',
+        state: 'Maharashtra',
+        basePrice: 3500,
+        minDiscount: 8,
+        maxDiscount: 25,
+        rating: 4.8,
+        totalOrders: 95,
+        socialOrders: 40,
+        verified: true
+      },
+      {
+        name: 'EventPro Managers',
+        type: 'EVENT_MANAGER',
+        description: 'End-to-end event management including logistics coordination, volunteer management, and on-ground execution.',
+        phone: '+91-9876543217',
+        email: 'eventpro@example.com',
+        address: 'Bandra West',
+        city: 'Mumbai',
+        state: 'Maharashtra',
+        basePrice: 15000,
+        minDiscount: 5,
+        maxDiscount: 20,
+        rating: 4.6,
+        totalOrders: 150,
+        socialOrders: 35,
+        verified: true
       }
     ]
   })
