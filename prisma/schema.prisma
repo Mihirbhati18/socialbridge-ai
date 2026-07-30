@@ -261,3 +261,53 @@ model Notification {
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
+
+model Vendor {
+  id            String   @id @default(cuid())
+  name          String
+  type          String   // CATERER, DECORATOR, TRANSPORT, PRINTER, EVENT_MANAGER
+  description   String
+  phone         String
+  email         String
+  address       String
+  city          String
+  state         String
+  basePrice     Float    // starting price in INR
+  minDiscount   Float    @default(0)     // min discount % they'd give for social causes (e.g. 5)
+  maxDiscount   Float    @default(20)    // max discount % they'd give for social causes (e.g. 30)
+  rating        Float    @default(4.0)
+  totalOrders   Int      @default(0)
+  socialOrders  Int      @default(0)     // orders for NGO/social causes
+  verified      Boolean  @default(false)
+  available     Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  negotiations AgentNegotiation[]
+}
+
+model AgentNegotiation {
+  id              String   @id @default(cuid())
+  userRequirement String
+  serviceType     String
+  budget          Float
+  status          String   @default("RUNNING") // RUNNING, SUCCESS, FAILED
+  selectedVendorId String?
+  finalAmount     Float?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  selectedVendor Vendor?    @relation(fields: [selectedVendorId], references: [id])
+  logs           AgentLog[]
+}
+
+model AgentLog {
+  id            String   @id @default(cuid())
+  negotiationId String
+  step          Int
+  type          String   // THOUGHT, TOOL_CALL, TOOL_RESULT, FINAL
+  content       String
+  createdAt     DateTime @default(now())
+
+  negotiation AgentNegotiation @relation(fields: [negotiationId], references: [id], onDelete: Cascade)
+}
