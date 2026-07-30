@@ -1,4 +1,4 @@
-import { prisma } from './prisma';
+import { prisma } from '@/backend/lib/prisma';
 
 interface SendNotificationParams {
   userId: string;

@@ -12,7 +12,7 @@ import { Github, Mail, Landmark, User, ArrowRight, ShieldCheck, Chrome, Globe, S
 import { useToast } from "@/hooks/use-toast";
 import { motion, AnimatePresence } from "framer-motion";
 
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000";
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "";
 
 export default function LoginPage() {
   return (
@@ -61,7 +61,7 @@ function LoginForm() {
     if (!targetEmail) return;
     setLoading(true);
     try {
-      const data = await callBackend("/api/auth/send-otp", { email: targetEmail });
+      const data = await callBackend("/api/auth/auth/otp/send", { email: targetEmail });
       if (data.devCode) {
         setOtp(data.devCode);
         toast({
@@ -87,7 +87,7 @@ function LoginForm() {
     if (!email) return;
     setLoading(true);
     try {
-      const data = await callBackend("/api/auth/send-otp", { email });
+      const data = await callBackend("/api/auth/auth/otp/send", { email });
       setStep("otp");
       if (data.devCode) {
         setOtp(data.devCode);
@@ -113,7 +113,7 @@ function LoginForm() {
     e.preventDefault();
     setLoading(true);
     try {
-      await callBackend("/api/auth/verify-otp", { email, code: otp });
+      await callBackend("/api/auth/auth/otp/verify", { email, code: otp });
 
       const result = await signIn("trust-otp", {
         email,

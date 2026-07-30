@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+import { prisma } from '@/backend/lib/prisma';
 import { notifyGovPortal } from '@/lib/gov-portal';
 
 export async function GET(

@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+﻿import { NextResponse } from 'next/server';
 import { prisma } from '@/backend/lib/prisma';
 import { DEMO_USER_EMAIL, toCategorySlug } from '@/lib/categories';
 

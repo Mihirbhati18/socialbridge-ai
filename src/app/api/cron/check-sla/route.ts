@@ -1,5 +1,5 @@
-import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+﻿import { NextResponse } from 'next/server';
+import { prisma } from '@/backend/lib/prisma';
 import { sendNotification } from '@/lib/notifications';
 
 export async function GET(req: Request) {
@@ -44,7 +44,7 @@ export async function GET(req: Request) {
           data: {
             issueId: issue.id,
             status: issue.status,
-            comment: '⚠️ SLA BREACHED: This issue has exceeded its target resolution time and has been auto-escalated.',
+            comment: 'âš ï¸ SLA BREACHED: This issue has exceeded its target resolution time and has been auto-escalated.',
             updatedBy: 'System',
           },
         }),

@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+import { prisma } from '@/backend/lib/prisma';
 import { DEMO_USER_EMAIL } from '@/lib/categories';
 
 export async function POST(

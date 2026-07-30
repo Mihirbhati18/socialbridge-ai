@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+﻿import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
 
 // Initialize Resend if API key exists

@@ -1,5 +1,5 @@
-import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+﻿import { NextResponse } from 'next/server';
+import { prisma } from '@/backend/lib/prisma';
 import { DEMO_USER_EMAIL, toCategorySlug } from '@/lib/categories';
 import { computeRankingScore } from '@/lib/ranking';
 import { notifyGovPortal } from '@/lib/gov-portal';

@@ -1,7 +1,7 @@
-import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+﻿import { NextResponse } from 'next/server';
+import { prisma } from '@/backend/lib/prisma';
 import { haversineDistance } from '@/lib/utils';
-import { generateJSON } from '@/lib/gemini';
+import { generateJSON } from '@/backend/lib/gemini';
 
 export async function POST(req: Request) {
   try {

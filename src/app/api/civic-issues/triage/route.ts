@@ -1,5 +1,5 @@
-import { NextResponse } from 'next/server';
-import { generateJSON } from '@/lib/gemini';
+﻿import { NextResponse } from 'next/server';
+import { generateJSON } from '@/backend/lib/gemini';
 import { CIVIC_CATEGORIES } from '@/lib/categories';
 
 export async function POST(req: Request) {
