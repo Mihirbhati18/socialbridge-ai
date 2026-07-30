@@ -26,3 +26,18 @@ The agent's "brain" works perfectly; it just needs a live data feed plugged into
 - **Vendor Responses:** Quote calculations and negotiation responses are handled by math logic functions instead of a real human replying via a WhatsApp API.
 
 **Conclusion:** The hardest part of Agentic AI—getting the AI to understand a goal, pick the right tool, and evaluate the result—is fully built and functional. The platform's intelligence is real; only the external data sources are simulated.
+
+---
+
+## Code Management & Version Control
+
+To ensure stability during rapid hackathon development, we utilize strict version control practices. 
+
+Instead of pushing experimental or risky changes directly to the `main` branch, all core AI optimizations, real vendor search implementations, and architectural updates are pushed to a dedicated feature branch named `mihir`. 
+
+### Why we do this:
+1. **Safety Net:** If an API rate limit causes the agent to break or if a new feature introduces a bug, the `main` branch remains clean and deployable.
+2. **Review Process:** It allows us to review code changes independently before merging them into the production codebase.
+3. **Agile Development:** It enables us to build and iterate extremely fast on complex AI agent logic without fear of breaking the working prototype. 
+
+This branch-based workflow demonstrates professional software engineering standards, ensuring that our AI innovations are backed by solid, reliable DevOps practices.
