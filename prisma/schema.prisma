@@ -248,11 +248,56 @@ model CivicIssue {
   priority    String   @default("MEDIUM")
   department  String?
   upvotes     Int      @default(0)
+  voteCount   Int      @default(0) // Unique citizens confirming the issue
+  slaDeadline DateTime?
+  isEscalated Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  reporter User          @relation(fields: [reporterId], references: [id], onDelete: Cascade)
-  updates  IssueUpdate[]
+  reporter      User                @relation(fields: [reporterId], references: [id], onDelete: Cascade)
+  updates       IssueUpdate[]
+  votes         IssueVote[]
+  subscriptions IssueSubscription[]
+}
+
+model IssueVote {
+  id        String   @id @default(cuid())
+  issueId   String
+  userId    String
+  createdAt DateTime @default(now())
+
+  issue CivicIssue @relation(fields: [issueId], references: [id], onDelete: Cascade)
+
+  @@unique([issueId, userId])
+}
+
+model IssueSubscription {
+  id        String   @id @default(cuid())
+  issueId   String
+  userId    String
+  email     String
+  phone     String?
+  channels  String   @default("EMAIL,IN_APP") // Comma-separated: EMAIL, SMS, IN_APP
+  createdAt DateTime @default(now())
+
+  issue CivicIssue @relation(fields: [issueId], references: [id], onDelete: Cascade)
+
+  @@unique([issueId, userId])
+}
+
+model SlaPolicy {
+  id                String @id @default(cuid())
+  category          String @unique
+  targetHours       Int
+  escalateAfterHours Int
+}
+
+model SlaEvent {
+  id        String   @id @default(cuid())
+  issueId   String
+  type      String   // BREACH, ESCALATION
+  comment   String?
+  createdAt DateTime @default(now())
 }
 
 model IssueUpdate {

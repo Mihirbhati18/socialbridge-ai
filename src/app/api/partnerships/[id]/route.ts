@@ -3,7 +3,7 @@ import { prisma } from '@/backend/lib/prisma';
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { id } = await params;
@@ -11,10 +11,12 @@ export async function GET(
     const partnership = await prisma.partnership.findUnique({
       where: { id },
       include: {
-        collabRequest: true,
+        request: {
+          include: { creator: true },
+        },
         orgs: {
           include: {
-            organization: true,
+            org: true,
           },
         },
         tasks: {
@@ -25,7 +27,7 @@ export async function GET(
         },
         messages: {
           orderBy: { createdAt: 'desc' },
-          take: 20,
+          take: 50,
         },
       },
     });
@@ -34,10 +36,16 @@ export async function GET(
       return NextResponse.json({ error: 'Partnership not found' }, { status: 404 });
     }
 
-    // Reverse messages to get chronological order (since we fetched desc for latest 20)
-    partnership.messages = partnership.messages.reverse();
-
-    return NextResponse.json(partnership);
+    return NextResponse.json({
+      ...partnership,
+      messages: [...partnership.messages].reverse(),
+      // aliases for any older UI that still expects these names
+      collabRequest: partnership.request,
+      orgs: partnership.orgs.map((o) => ({
+        ...o,
+        organization: o.org,
+      })),
+    });
   } catch (error) {
     console.error('Error fetching partnership:', error);
     return NextResponse.json({ error: 'Failed to fetch partnership details' }, { status: 500 });

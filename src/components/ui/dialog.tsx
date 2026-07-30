@@ -51,7 +51,7 @@ export function Dialog({ open, onClose, title, children, className }: DialogProp
           </button>
         </div>
         
-        <div className="text-sm text-muted-foreground">
+        <div>
           {children}
         </div>
       </div>

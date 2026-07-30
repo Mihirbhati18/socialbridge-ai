@@ -27,7 +27,7 @@ export default function DashboardPage() {
     <>
       <Topbar title="Dashboard" subtitle="Here's what's happening in your community" />
       
-      <div className="p-6 md:p-8 max-w-7xl mx-auto w-full space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+      <div className="p-6 md:p-8 max-w-7xl mx-auto w-full space-y-8 animate-fade-in">
         
         {/* Welcome Section */}
         <div className="space-y-2">

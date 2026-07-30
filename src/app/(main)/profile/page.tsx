@@ -11,7 +11,7 @@ export default function ProfilePage() {
     <>
       <Topbar title="Profile" subtitle="Manage your account settings" />
       
-      <div className="p-6 md:p-8 max-w-4xl mx-auto w-full space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+      <div className="p-6 md:p-8 max-w-4xl mx-auto w-full space-y-8 animate-fade-in">
         
         {/* Header Profile Card */}
         <Card className="bg-card/40 backdrop-blur-md border-white/5 overflow-hidden">

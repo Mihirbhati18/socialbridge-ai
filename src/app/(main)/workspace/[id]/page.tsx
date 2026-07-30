@@ -62,9 +62,9 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           partnershipId: id,
-          eventTitle: partnership?.collabRequest?.title,
-          eventDescription: partnership?.collabRequest?.description,
-          eventCategory: partnership?.collabRequest?.category
+          eventTitle: partnership?.request?.title || partnership?.collabRequest?.title,
+          eventDescription: partnership?.request?.description || partnership?.collabRequest?.description,
+          eventCategory: partnership?.request?.category || partnership?.collabRequest?.category
         })
       });
       if (res.ok) {
@@ -85,10 +85,10 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          recipientOrg: partnership?.orgs?.[1]?.organization?.name || 'Partner',
-          senderOrg: partnership?.orgs?.[0]?.organization?.name || 'Us',
-          eventTitle: partnership?.collabRequest?.title,
-          eventDescription: partnership?.collabRequest?.description,
+          recipientOrg: partnership?.orgs?.[1]?.org?.name || partnership?.orgs?.[1]?.organization?.name || 'Partner',
+          senderOrg: partnership?.orgs?.[0]?.org?.name || partnership?.orgs?.[0]?.organization?.name || 'Us',
+          eventTitle: partnership?.request?.title || partnership?.collabRequest?.title,
+          eventDescription: partnership?.request?.description || partnership?.collabRequest?.description,
         })
       });
       if (res.ok) {
@@ -97,8 +97,8 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            title: data.subject,
-            content: data.body,
+            title: data.subject || data.email?.slice(0, 60) || 'Outreach Email',
+            content: data.body || data.email,
             type: 'EMAIL'
           })
         });
@@ -120,9 +120,9 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           partnershipId: id,
-          eventTitle: partnership?.collabRequest?.title,
-          eventDescription: partnership?.collabRequest?.description,
-          eventCategory: partnership?.collabRequest?.category,
+          eventTitle: partnership?.request?.title || partnership?.collabRequest?.title,
+          eventDescription: partnership?.request?.description || partnership?.collabRequest?.description,
+          eventCategory: partnership?.request?.category || partnership?.collabRequest?.category,
         })
       });
       if (res.ok) {
@@ -195,7 +195,7 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
         const res = await fetch('/api/ai/chat', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ message: userMessage, context: partnership?.collabRequest?.title })
+          body: JSON.stringify({ message: userMessage, context: partnership?.request?.title || partnership?.collabRequest?.title })
         });
 
         if (!res.body) return;
@@ -230,6 +230,7 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
   if (isLoading) return <div className="p-10 text-white text-center">Loading workspace...</div>;
   if (!partnership) return <div className="p-10 text-white text-center">Workspace not found.</div>;
 
+  const project = partnership.request || partnership.collabRequest;
   const todoTasks = tasks.filter(t => t.status === 'TODO');
   const inProgressTasks = tasks.filter(t => t.status === 'IN_PROGRESS');
   const doneTasks = tasks.filter(t => t.status === 'DONE');
@@ -238,7 +239,7 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
     <div className="container mx-auto p-4 md:p-8 min-h-screen">
       <div className="mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-white mb-2">{partnership.collabRequest?.title || 'Workspace'}</h1>
+          <h1 className="text-3xl font-bold text-white mb-2">{project?.title || 'Workspace'}</h1>
           <div className="flex items-center text-gray-400 text-sm gap-4">
             <span className="flex items-center"><Users className="h-4 w-4 mr-1"/> {partnership.orgs?.length || 0} Organizations</span>
             <Badge variant="outline" className="text-emerald-400 border-emerald-400/30 bg-emerald-400/10">{partnership.status}</Badge>
@@ -261,12 +262,12 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
                 <CardTitle className="text-xl">Project Details</CardTitle>
               </CardHeader>
               <CardContent className="text-gray-300">
-                <p className="whitespace-pre-wrap">{partnership.collabRequest?.description || 'No description provided.'}</p>
+                <p className="whitespace-pre-wrap">{project?.description || 'No description provided.'}</p>
                 <div className="mt-6 space-y-2">
                   <h4 className="font-medium text-white">Partnering Organizations:</h4>
                   <ul className="list-disc pl-5">
                     {partnership.orgs?.map((o: any) => (
-                      <li key={o.id}>{o.organization?.name}</li>
+                      <li key={o.id}>{o.org?.name || o.organization?.name}</li>
                     ))}
                   </ul>
                 </div>

@@ -12,7 +12,7 @@ export async function GET() {
           },
         },
         _count: {
-          select: { tasks: true },
+          select: { tasks: true, messages: true, documents: true },
         },
       },
       orderBy: {
