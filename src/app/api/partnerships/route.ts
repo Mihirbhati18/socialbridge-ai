@@ -8,11 +8,11 @@ export async function GET() {
         request: true,
         orgs: {
           include: {
-            organization: true,
+            org: true,
           },
         },
         _count: {
-          select: { tasks: true },
+          select: { tasks: true, messages: true, documents: true },
         },
       },
       orderBy: {

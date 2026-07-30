@@ -672,6 +672,83 @@ async function main() {
     ]
   })
 
+  // -----------------------------------------
+  // 8. Sample Partnership (so My Partnerships isn't empty)
+  // -----------------------------------------
+  console.log('Seeding sample Partnership...')
+
+  await prisma.collabResponse.create({
+    data: {
+      requestId: request3.id,
+      orgId: dps.id,
+      orgName: dps.name,
+      message: 'Happy to host student volunteers for the plantation drive.',
+      status: 'ACCEPTED',
+    },
+  })
+
+  const samplePartnership = await prisma.partnership.create({
+    data: {
+      requestId: request3.id,
+      status: 'ACTIVE',
+      startDate: new Date(),
+    },
+  })
+
+  await prisma.partnershipOrg.createMany({
+    data: [
+      { partnershipId: samplePartnership.id, orgId: greenEarth.id, role: 'HOST' },
+      { partnershipId: samplePartnership.id, orgId: dps.id, role: 'PARTNER' },
+    ],
+  })
+
+  await prisma.task.createMany({
+    data: [
+      {
+        partnershipId: samplePartnership.id,
+        title: 'Confirm venue & sapling delivery',
+        status: 'DONE',
+        priority: 'HIGH',
+        aiGenerated: true,
+      },
+      {
+        partnershipId: samplePartnership.id,
+        title: 'Recruit 40 student volunteers',
+        status: 'IN_PROGRESS',
+        priority: 'HIGH',
+        aiGenerated: true,
+      },
+      {
+        partnershipId: samplePartnership.id,
+        title: 'Prepare planting layout map',
+        status: 'TODO',
+        priority: 'MEDIUM',
+        aiGenerated: true,
+      },
+    ],
+  })
+
+  await prisma.workspaceMessage.create({
+    data: {
+      partnershipId: samplePartnership.id,
+      senderName: 'SocialBridge AI',
+      senderRole: 'SYSTEM',
+      content:
+        'Welcome to the Monsoon Tree Plantation Drive workspace. DPS and Green Earth Society are partnered. Use AI Quick Actions to generate more tasks or a proposal.',
+    },
+  })
+
+  await prisma.document.create({
+    data: {
+      partnershipId: samplePartnership.id,
+      title: 'Plantation Kickoff Notes',
+      content:
+        '## Goals\n- Plant 1000 native saplings\n- Engage school volunteers\n- Track survival rate for 30 days\n\n## Next steps\n1. Finalize site map\n2. Confirm water access\n3. Share volunteer briefing',
+      type: 'note',
+      aiGenerated: false,
+    },
+  })
+
   console.log('Seeding complete!')
 }
 

@@ -18,6 +18,8 @@ export default function CollabDetailsPage() {
   const [loading, setLoading] = useState(true);
   const [analyzing, setAnalyzing] = useState(false);
   const [acceptedOrgs, setAcceptedOrgs] = useState<string[]>([]);
+  const [acceptingId, setAcceptingId] = useState<string | null>(null);
+  const [partnershipId, setPartnershipId] = useState<string | null>(null);
   
   // Outreach Modal State
   const [outreachModalOpen, setOutreachModalOpen] = useState(false);
@@ -66,6 +68,7 @@ export default function CollabDetailsPage() {
   };
 
   const handleAcceptPartner = async (orgId: string, orgName: string) => {
+    setAcceptingId(orgId);
     try {
       const res = await fetch(`/api/collaborations/${id}/respond`, {
         method: 'POST',
@@ -73,12 +76,17 @@ export default function CollabDetailsPage() {
         body: JSON.stringify({ orgId, orgName, status: 'ACCEPTED' })
       });
       if (res.ok) {
+        const data = await res.json();
         setAcceptedOrgs([...acceptedOrgs, orgId]);
-        // Update local request state to in progress if it was open
         setRequest({ ...request, status: 'IN_PROGRESS' });
+        if (data.partnershipId) {
+          setPartnershipId(data.partnershipId);
+        }
       }
     } catch (e) {
       console.error(e);
+    } finally {
+      setAcceptingId(null);
     }
   };
 
@@ -210,7 +218,7 @@ export default function CollabDetailsPage() {
         {/* Left Side: 60% */}
         <div className="lg:col-span-2 space-y-6">
           <div className="flex items-center gap-3 mb-2">
-            <Badge className="bg-indigo-100 text-indigo-800 hover:bg-indigo-200">{request.category}</Badge>
+            <Badge className="bg-indigo-100 text-indigo-800 hover:bg-indigo-200">{request.category?.replace(/_/g, ' ')}</Badge>
             <Badge variant={request.status === 'OPEN' ? 'default' : 'secondary'} className={request.status === 'OPEN' ? 'bg-green-500' : ''}>
               {request.status.replace('_', ' ')}
             </Badge>
@@ -305,7 +313,7 @@ export default function CollabDetailsPage() {
 
       {/* Recommendations Section */}
       {recommendations.length > 0 && (
-        <div className="pt-8 border-t border-gray-200 mt-12 animate-in fade-in slide-in-from-bottom-8 duration-700">
+        <div className="pt-8 border-t border-gray-200 mt-12 animate-fade-in">
           <div className="mb-8">
             <h2 className="text-3xl font-bold flex items-center gap-3 text-gray-900">
               🤖 AI Partner Recommendations
@@ -325,12 +333,12 @@ export default function CollabDetailsPage() {
                     <div className="relative w-32 h-32 mb-4">
                       <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
                         <circle cx="50" cy="50" r="40" stroke="#e2e8f0" strokeWidth="8" fill="none" />
-                        <circle cx="50" cy="50" r="40" stroke="url(#gradient)" strokeWidth="8" fill="none" 
+                        <circle cx="50" cy="50" r="40" stroke={`url(#gradient-${rec.organization.id})`} strokeWidth="8" fill="none" 
                           strokeDasharray={`${251.2 * (rec.score / 100)} 251.2`} 
                           strokeLinecap="round" className="transition-all duration-1000 ease-out" 
                         />
                         <defs>
-                          <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                          <linearGradient id={`gradient-${rec.organization.id}`} x1="0%" y1="0%" x2="100%" y2="0%">
                             <stop offset="0%" stopColor="#4f46e5" />
                             <stop offset="100%" stopColor="#9333ea" />
                           </linearGradient>
@@ -355,9 +363,9 @@ export default function CollabDetailsPage() {
                         <Button disabled className="w-full bg-green-500 text-white font-bold opacity-100">
                           <CheckCircle2 className="mr-2 h-4 w-4" /> Partner Accepted
                         </Button>
-                        <Link href="/workspace" className="block w-full">
+                        <Link href={partnershipId ? `/workspace/${partnershipId}` : '/partnerships'} className="block w-full">
                           <Button variant="outline" className="w-full border-green-200 text-green-700 hover:bg-green-50">
-                            Go to Workspace <ArrowRight className="ml-2 h-4 w-4" />
+                            Open Workspace <ArrowRight className="ml-2 h-4 w-4" />
                           </Button>
                         </Link>
                       </div>
@@ -372,9 +380,14 @@ export default function CollabDetailsPage() {
                         </Button>
                         <Button 
                           onClick={() => handleAcceptPartner(rec.organization.id, rec.organization.name)}
+                          disabled={acceptingId === rec.organization.id}
                           className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold shadow-md hover:shadow-lg transition-all"
                         >
-                          Accept Partner
+                          {acceptingId === rec.organization.id ? (
+                            <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Accepting...</>
+                          ) : (
+                            'Accept Partner'
+                          )}
                         </Button>
                       </div>
                     )}
@@ -431,7 +444,7 @@ export default function CollabDetailsPage() {
           </div>
 
           {!draftEmailContent && !isDrafting && (
-            <div className="space-y-4 animate-in fade-in zoom-in duration-300">
+            <div className="space-y-4 animate-fade-in">
               <div className="space-y-2">
                 <label className="text-sm font-semibold text-gray-700">What is your primary goal?</label>
                 <div className="grid grid-cols-2 gap-3">
@@ -481,7 +494,7 @@ export default function CollabDetailsPage() {
           )}
 
           {draftEmailContent && !isDrafting && !isSent && (
-            <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div className="space-y-4 animate-fade-in">
               <div className="rounded-xl border border-gray-200 overflow-hidden shadow-sm bg-white">
                 <div className="bg-gray-50 p-3 border-b border-gray-200 flex justify-between items-center">
                   <span className="text-sm font-semibold text-gray-600">Drafted Email</span>

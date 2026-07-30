@@ -1,57 +1,111 @@
 import { NextResponse } from 'next/server';
+import { prisma } from '@/lib/prisma';
+import { notifyGovPortal } from '@/lib/gov-portal';
 
-const mockIssue = {
-  id: 'iss_1',
-  title: 'Large Pothole on Main St',
-  description: 'There is a massive pothole causing traffic slowdowns and potential vehicle damage.',
-  category: 'ROAD',
-  status: 'OPEN',
-  priority: 'HIGH',
-  address: 'Main St & 4th Ave, Mumbai',
-  city: 'Mumbai',
-  lat: 19.076,
-  lng: 72.8777,
-  images: [],
-  reporterId: 'usr_1',
-  reporter: { name: 'Rahul Sharma', avatarUrl: null },
-  upvotes: 12,
-  createdAt: new Date().toISOString(),
-  updatedAt: new Date().toISOString(),
-  updates: [
-    {
-      id: 'upd_1',
-      status: 'OPEN',
-      comment: 'Issue reported by user.',
-      updatedBy: 'System',
-      createdAt: new Date().toISOString(),
-    }
-  ]
-};
-
-export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
+export async function GET(
+  _req: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
     const { id } = await params;
-    return NextResponse.json({ ...mockIssue, id });
+
+    const issue = await prisma.civicIssue.findUnique({
+      where: { id },
+      include: {
+        reporter: {
+          select: { id: true, name: true, image: true, email: true },
+        },
+        updates: {
+          orderBy: { createdAt: 'asc' },
+        },
+      },
+    });
+
+    if (!issue) {
+      return NextResponse.json({ error: 'Issue not found' }, { status: 404 });
+    }
+
+    return NextResponse.json(issue);
   } catch (error) {
     console.error('Error fetching issue:', error);
     return NextResponse.json({ error: 'Failed to fetch issue' }, { status: 500 });
   }
 }
 
-export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
+export async function PATCH(
+  req: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
     const { id } = await params;
     const body = await req.json();
-    const { status, department, priority } = body;
+    const { status, department, priority, comment, updatedBy } = body;
 
-    const updatedIssue = {
-      ...mockIssue,
-      id,
-      status: status || mockIssue.status,
-      priority: priority || mockIssue.priority,
-      department: department || 'General',
-      updatedAt: new Date().toISOString(),
-    };
+    const existing = await prisma.civicIssue.findUnique({ where: { id } });
+    if (!existing) {
+      return NextResponse.json({ error: 'Issue not found' }, { status: 404 });
+    }
+
+    const updatedIssue = await prisma.civicIssue.update({
+      where: { id },
+      data: {
+        ...(status ? { status } : {}),
+        ...(priority ? { priority } : {}),
+        ...(department !== undefined ? { department } : {}),
+      },
+      include: {
+        reporter: {
+          select: { id: true, name: true, image: true, email: true },
+        },
+        updates: { orderBy: { createdAt: 'asc' } },
+      },
+    });
+
+    const statusChanged = status && status !== existing.status;
+
+    if (statusChanged) {
+      await prisma.issueUpdate.create({
+        data: {
+          issueId: id,
+          status,
+          comment: comment || `Status updated to ${status}`,
+          updatedBy: updatedBy || 'Official',
+        },
+      });
+    }
+
+    notifyGovPortal({
+      event: 'ISSUE_UPDATED',
+      timestamp: new Date().toISOString(),
+      issue: {
+        id: updatedIssue.id,
+        title: updatedIssue.title,
+        description: updatedIssue.description,
+        category: updatedIssue.category,
+        status: updatedIssue.status,
+        priority: updatedIssue.priority,
+        address: updatedIssue.address,
+        city: updatedIssue.city,
+        lat: updatedIssue.lat,
+        lng: updatedIssue.lng,
+        images: updatedIssue.images,
+        department: updatedIssue.department,
+        upvotes: updatedIssue.upvotes,
+        reporter: updatedIssue.reporter
+          ? { name: updatedIssue.reporter.name, email: updatedIssue.reporter.email }
+          : null,
+        createdAt: updatedIssue.createdAt.toISOString(),
+        updatedAt: updatedIssue.updatedAt.toISOString(),
+      },
+      update: statusChanged
+        ? {
+            previousStatus: existing.status,
+            newStatus: status,
+            comment: comment || undefined,
+            updatedBy: updatedBy || 'Official',
+          }
+        : undefined,
+    });
 
     return NextResponse.json(updatedIssue);
   } catch (error) {

@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
-import { MapPin, ThumbsUp, AlertCircle, Clock, Search, Filter, Plus, List, Map as MapIcon } from 'lucide-react';
+import { MapPin, ThumbsUp, AlertCircle, Clock, Plus, List, Map as MapIcon, TrendingUp, Users, AlertTriangle } from 'lucide-react';
 
 const IssueMap = dynamic(() => import('@/components/civic/issue-map'), { 
   ssr: false, 
@@ -27,7 +27,7 @@ export default function CivicIssuesPage() {
   const fetchIssues = async () => {
     setLoading(true);
     try {
-      const cat = filterCategory !== 'All' ? filterCategory.toUpperCase() : '';
+      const cat = filterCategory !== 'All' ? filterCategory.toLowerCase() : '';
       const stat = filterStatus !== 'All' ? filterStatus : '';
       let url = '/api/civic-issues';
       const params = new URLSearchParams();
@@ -132,6 +132,14 @@ export default function CivicIssuesPage() {
         </div>
       )}
 
+      {/* Ranking Info */}
+      {view === 'list' && (
+        <div className="flex items-center gap-3 p-3 rounded-xl bg-gradient-to-r from-orange-500/5 to-red-500/5 border border-orange-500/10 text-xs text-gray-400">
+          <TrendingUp className="w-4 h-4 text-orange-400 shrink-0" />
+          <span>Sorted by <strong className="text-orange-300">smart ranking</strong>: freshness + urgency + public concern + status</span>
+        </div>
+      )}
+
       {/* Content */}
       {loading ? (
         <div className="flex justify-center items-center py-20">
@@ -143,16 +151,46 @@ export default function CivicIssuesPage() {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {issues.length > 0 ? issues.map(issue => (
-            <div key={issue.id} className="group flex flex-col bg-white/[0.03] hover:bg-white/[0.06] border border-white/10 rounded-xl overflow-hidden transition-all duration-300 hover:shadow-[0_0_20px_rgba(249,115,22,0.1)] hover:-translate-y-1">
+          {issues.length > 0 ? issues.map((issue, idx) => {
+            const timeAgo = (() => {
+              const h = (Date.now() - new Date(issue.createdAt).getTime()) / 36e5;
+              if (h < 1) { const m = Math.floor(h * 60); return m <= 1 ? 'Just now' : `${m}min ago`; }
+              if (h < 24) return `${Math.floor(h)}h ago`;
+              if (h < 168) return `${Math.floor(h / 24)}d ago`;
+              if (h < 720) return `${Math.floor(h / 168)}w ago`;
+              return `${Math.floor(h / 720)}mo ago`;
+            })();
+            const urgency = issue.rankingScore >= 80 ? { label: 'Critical', color: 'text-red-400 border-red-500/30 bg-red-500/20' }
+              : issue.rankingScore >= 60 ? { label: 'High', color: 'text-orange-400 border-orange-500/30 bg-orange-500/20' }
+              : issue.rankingScore >= 40 ? { label: 'Medium', color: 'text-amber-400 border-amber-500/30 bg-amber-500/20' }
+              : { label: 'Low', color: 'text-green-400 border-green-500/30 bg-green-500/20' };
+            return (
+            <div key={issue.id} className={`group flex flex-col bg-white/[0.03] hover:bg-white/[0.06] border ${idx === 0 ? 'border-orange-500/30' : 'border-white/10'} rounded-xl overflow-hidden transition-all duration-300 hover:shadow-[0_0_20px_rgba(249,115,22,0.1)] hover:-translate-y-1`}>
               <div className="p-5 flex-1 flex flex-col">
                 <div className="flex items-start justify-between mb-3">
-                  <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${getCategoryColor(issue.category)}`}>
-                    {issue.category}
-                  </span>
-                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${getStatusColor(issue.status)}`}>
-                    {issue.status.replace('_', ' ')}
-                  </span>
+                  <div className="flex items-center gap-2">
+                    {idx === 0 && (
+                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-yellow-500/20 text-yellow-400 border border-yellow-500/30">
+                        #1
+                      </span>
+                    )}
+                    <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${getCategoryColor(issue.category)}`}>
+                      {issue.category?.charAt(0).toUpperCase() + issue.category?.slice(1).toLowerCase()}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    {issue.isEscalated && (
+                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-red-600 text-white animate-pulse flex items-center gap-0.5">
+                        <AlertTriangle className="w-2.5 h-2.5" /> SLA
+                      </span>
+                    )}
+                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${urgency.color}`}>
+                      {urgency.label}
+                    </span>
+                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${getStatusColor(issue.status)}`}>
+                      {issue.status.replace('_', ' ')}
+                    </span>
+                  </div>
                 </div>
                 
                 <h3 className="text-lg font-semibold text-white mb-2 line-clamp-1 group-hover:text-orange-400 transition-colors">
@@ -171,11 +209,19 @@ export default function CivicIssuesPage() {
                   <div className="flex items-center gap-3 text-xs text-gray-500">
                     <span className="flex items-center gap-1">
                       <Clock className="w-3.5 h-3.5" />
-                      {new Date(issue.createdAt).toLocaleDateString()}
+                      {timeAgo}
                     </span>
                     <span className="flex items-center gap-1">
                       <ThumbsUp className="w-3.5 h-3.5 text-blue-400" />
                       {issue.upvotes || 0}
+                    </span>
+                    <span className="flex items-center gap-1" title="Citizens confirming this issue">
+                      <Users className="w-3.5 h-3.5 text-orange-400" />
+                      {issue.voteCount || 0}
+                    </span>
+                    <span className="flex items-center gap-1" title={`Priority score: ${issue.rankingScore}`}>
+                      <TrendingUp className="w-3.5 h-3.5 text-orange-400" />
+                      {issue.rankingScore}
                     </span>
                   </div>
                   <Link href={`/civic-issues/${issue.id}`}>
@@ -184,7 +230,7 @@ export default function CivicIssuesPage() {
                 </div>
               </div>
             </div>
-          )) : (
+          )}) : (
             <div className="col-span-full py-20 text-center text-gray-500">
               <AlertCircle className="w-12 h-12 mx-auto mb-3 opacity-50" />
               <p>No civic issues found matching your filters.</p>
