@@ -1,7 +1,11 @@
 import { PrismaClient } from '@prisma/client';
 
 const prismaClientSingleton = () => {
-  return new PrismaClient();
+  const client = new PrismaClient();
+  client.$connect()
+    .then(() => console.log('Database connected successfully'))
+    .catch((err) => console.error('Database connection failed:', err));
+  return client;
 };
 
 declare global {

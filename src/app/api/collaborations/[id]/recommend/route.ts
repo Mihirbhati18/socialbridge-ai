@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getRecommendations } from '@/services/partnershipEngine';
+import { getRecommendations } from '@/backend/services/partnershipEngine';
 
 export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
