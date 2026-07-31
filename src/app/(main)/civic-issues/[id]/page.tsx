@@ -5,6 +5,7 @@ import { MapPin, Clock, User, ThumbsUp, ChevronLeft, Map as MapIcon, Image as Im
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import { cn } from '@/lib/utils';
+import { CouncilDebate } from '@/components/civic/council-debate';
 
 const IssueMap = dynamic(() => import('@/components/civic/issue-map'), { 
   ssr: false, 
@@ -225,6 +226,13 @@ export default function IssueDetailPage({ params }: { params: Promise<{ id: stri
               </div>
             );
           })()}
+
+          {/* City Council Multi-Agent Debate */}
+          <CouncilDebate
+            issueId={resolvedParams.id}
+            issueTitle={issue.title}
+            existingResolution={issue.councilResolution}
+          />
         </div>
 
         {/* Sidebar / Timeline */}
