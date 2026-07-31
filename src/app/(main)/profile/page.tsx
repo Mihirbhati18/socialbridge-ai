@@ -1,12 +1,17 @@
-'use client';
-
 import { Topbar } from '@/components/layout/topbar';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { MapPin, Mail, Briefcase, Award, Calendar, Edit3 } from 'lucide-react';
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
-export default function ProfilePage() {
+export default async function ProfilePage() {
+  const session = await getServerSession(authOptions);
+  const userName = session?.user?.name || "Dr. Priya Sharma";
+  const userEmail = session?.user?.email || "priya.sharma@example.com";
+  const userInitials = userName.substring(0, 2).toUpperCase();
+
   return (
     <>
       <Topbar title="Profile" subtitle="Manage your account settings" />
@@ -20,11 +25,11 @@ export default function ProfilePage() {
             <div className="flex flex-col sm:flex-row items-start sm:items-end gap-6 -mt-12 mb-6">
               <div className="w-24 h-24 rounded-2xl bg-gradient-to-tr from-violet-500 to-fuchsia-500 p-1 shadow-xl relative">
                 <div className="w-full h-full bg-background rounded-xl flex items-center justify-center text-3xl font-bold text-foreground">
-                  PS
+                  {userInitials}
                 </div>
               </div>
               <div className="flex-1 space-y-1">
-                <h1 className="text-2xl font-bold">Dr. Priya Sharma</h1>
+                <h1 className="text-2xl font-bold">{userName}</h1>
                 <p className="text-primary font-medium">Healthcare Professional</p>
               </div>
               <Button className="shrink-0 gap-2">
@@ -44,7 +49,7 @@ export default function ProfilePage() {
                     <MapPin className="w-4 h-4 text-foreground/70" /> Mumbai, Maharashtra
                   </div>
                   <div className="flex items-center gap-3 text-sm text-muted-foreground">
-                    <Mail className="w-4 h-4 text-foreground/70" /> priya.sharma@example.com
+                    <Mail className="w-4 h-4 text-foreground/70" /> {userEmail}
                   </div>
                   <div className="flex items-center gap-3 text-sm text-muted-foreground">
                     <Briefcase className="w-4 h-4 text-foreground/70" /> Medical Consultant, City Hospital

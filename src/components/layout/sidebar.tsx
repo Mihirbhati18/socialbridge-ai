@@ -16,6 +16,8 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 
+import { useSession, signOut } from 'next-auth/react';
+
 const navItems = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
   { name: 'Discover', href: '/discover', icon: Compass },
@@ -29,8 +31,12 @@ const navItems = [
 export function Sidebar() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
+  const { data: session } = useSession();
 
   const toggleSidebar = () => setIsOpen(!isOpen);
+
+  const userName = session?.user?.name || 'Citizen';
+  const userInitials = userName.substring(0, 2).toUpperCase();
 
   return (
     <>
@@ -88,18 +94,22 @@ export function Sidebar() {
             className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors group"
           >
             <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-violet-500 to-fuchsia-500 flex items-center justify-center text-white font-bold shadow-lg">
-              PS
+              {userInitials}
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-semibold text-foreground truncate group-hover:text-primary transition-colors">
-                Dr. Priya Sharma
+                {userName}
               </p>
-              <p className="text-xs text-muted-foreground truncate">Demo · Professional</p>
+              <p className="text-xs text-muted-foreground truncate">{session?.user?.email || 'Citizen'}</p>
             </div>
-            <span className="p-1.5 text-muted-foreground" title="Demo session">
-              <LogOut size={16} />
-            </span>
           </Link>
+          <button
+            onClick={() => signOut({ callbackUrl: '/' })}
+            className="mt-2 w-full flex items-center justify-center gap-2 p-2 rounded-lg text-muted-foreground hover:text-white hover:bg-white/5 transition-colors"
+          >
+            <LogOut size={16} />
+            <span className="text-sm font-medium">Log out</span>
+          </button>
         </div>
       </aside>
     </>

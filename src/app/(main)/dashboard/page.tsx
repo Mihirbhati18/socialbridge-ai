@@ -1,10 +1,10 @@
-'use client';
-
 import { Topbar } from '@/components/layout/topbar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { 
   Users, 
   MessageSquare, 
@@ -22,7 +22,10 @@ import {
   Heart
 } from 'lucide-react';
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
+  const session = await getServerSession(authOptions);
+  const userName = session?.user?.name || "Citizen";
+
   return (
     <>
       <Topbar title="Dashboard" subtitle="Here's what's happening in your community" />
@@ -32,7 +35,7 @@ export default function DashboardPage() {
         {/* Welcome Section */}
         <div className="space-y-2">
           <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-br from-white to-white/60 bg-clip-text text-transparent">
-            Welcome back, Dr. Priya! 👋
+            Welcome back, {userName}! 👋
           </h1>
           <p className="text-muted-foreground">
             You have 3 new partnership requests and 5 pending tasks for your ongoing projects.
