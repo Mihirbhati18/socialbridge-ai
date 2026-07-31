@@ -73,7 +73,7 @@ export async function POST(
         await prisma.workspaceMessage.create({
           data: {
             partnershipId: partnership.id,
-            senderName: 'SocialBridge AI',
+            senderName: 'Concord',
             senderRole: 'SYSTEM',
             content: `Partnership started! ${org.name} joined "${collab.title}". Use AI Quick Actions to generate an action plan, outreach email, or full proposal.`,
           },

@@ -9,7 +9,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "SocialBridge AI — Next-Gen Civic Collaboration",
+  title: "Concord — Next-Gen Civic Collaboration",
   description: "AI-powered platform connecting citizens, NGOs, and government to solve social problems through intelligent partnerships.",
 };
 

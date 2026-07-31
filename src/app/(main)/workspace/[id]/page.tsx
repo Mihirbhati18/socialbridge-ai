@@ -190,7 +190,7 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
       if (useAI) {
         // Create placeholder for AI response
         const aiMessageId = (Date.now() + 1).toString();
-        setMessages(prev => [...prev, { id: aiMessageId, content: '', senderName: 'SocialBridge AI', senderRole: 'SYSTEM' }]);
+        setMessages(prev => [...prev, { id: aiMessageId, content: '', senderName: 'Concord', senderRole: 'SYSTEM' }]);
         
         const res = await fetch('/api/ai/chat', {
           method: 'POST',
@@ -219,7 +219,7 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
         await fetch(`/api/partnerships/${id}/messages`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ senderName: 'SocialBridge AI', senderRole: 'SYSTEM', content: aiFullResponse })
+          body: JSON.stringify({ senderName: 'Concord', senderRole: 'SYSTEM', content: aiFullResponse })
         });
       }
     } catch (error) {
@@ -401,7 +401,7 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
               <Input
                 value={chatInput}
                 onChange={e => setChatInput(e.target.value)}
-                placeholder={useAI ? "Ask SocialBridge AI or message team..." : "Message team..."}
+                placeholder={useAI ? "Ask Concord or message team..." : "Message team..."}
                 className="bg-white/5 border-white/10 text-white"
               />
               <Button type="submit" disabled={!chatInput.trim()} className={useAI ? "bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500" : ""}>

@@ -275,7 +275,7 @@ export default function CollabDetailsPage() {
             </CardHeader>
             <CardContent className="space-y-4">
               <p className="text-indigo-100 text-lg">
-                Let SocialBridge AI analyze our network of thousands of verified NGOs and organizations to find the perfect partners for your initiative.
+                Let Concord analyze our network of thousands of verified NGOs and organizations to find the perfect partners for your initiative.
               </p>
               <div className="bg-white/10 p-4 rounded-xl backdrop-blur-sm border border-white/20 mt-4">
                 <ul className="space-y-2 text-sm text-indigo-50">
@@ -318,7 +318,7 @@ export default function CollabDetailsPage() {
             <h2 className="text-3xl font-bold flex items-center gap-3 text-gray-900">
               🤖 AI Partner Recommendations
             </h2>
-            <p className="text-indigo-600 font-medium mt-1">Powered by SocialBridge AI Matchmaking</p>
+            <p className="text-indigo-600 font-medium mt-1">Powered by Concord Matchmaking</p>
           </div>
 
           <div className="space-y-6">

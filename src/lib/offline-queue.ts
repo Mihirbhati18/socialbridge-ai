@@ -6,7 +6,7 @@ export interface QueuedIssue {
 
 export const initDB = () => {
   return new Promise<IDBDatabase>((resolve, reject) => {
-    const request = indexedDB.open('SocialBridgeOffline', 1);
+    const request = indexedDB.open('ConcordOffline', 1);
     
     request.onerror = () => reject(request.error);
     request.onsuccess = () => resolve(request.result);

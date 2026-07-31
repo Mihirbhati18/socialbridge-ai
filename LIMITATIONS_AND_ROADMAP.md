@@ -1,4 +1,4 @@
-# Mihir's Work: SocialBridge AI Architecture
+# Mihir's Work: Concord Architecture
 
 ## Executive Summary for Judges
 

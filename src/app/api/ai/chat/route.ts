@@ -1,4 +1,4 @@
-﻿import { GoogleGenerativeAI } from '@google/generative-ai';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 
@@ -6,7 +6,7 @@ export async function POST(req: Request) {
   try {
     const { message, context } = await req.json();
 
-    const systemPrompt = `You are the SocialBridge AI assistant. You help organizations collaborate on social impact projects. You can help with event planning, drafting communications, generating ideas, and solving collaboration challenges. Be helpful, concise, and action-oriented. Context: ${context || 'None'}`;
+    const systemPrompt = `You are the Concord assistant. You help organizations collaborate on social impact projects. You can help with event planning, drafting communications, generating ideas, and solving collaboration challenges. Be helpful, concise, and action-oriented. Context: ${context || 'None'}`;
 
     const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash', systemInstruction: systemPrompt });
 

@@ -24,7 +24,7 @@ export default function LandingPage() {
 
   if (!mounted) {
     return <div className="min-h-screen bg-[#020617] flex items-center justify-center">
-      <div className="text-cyan-500 animate-pulse font-black tracking-tighter text-2xl">SOCIALBRIDGE</div>
+      <div className="text-cyan-500 animate-pulse font-black tracking-tighter text-2xl">CONCORD</div>
     </div>;
   }
 
@@ -62,7 +62,7 @@ export default function LandingPage() {
             </div>
             <div className="flex flex-col">
               <span className="text-xl font-black tracking-tighter text-white leading-none">
-                SOCIALBRIDGE
+                CONCORD
               </span>
               <span className="text-[10px] font-bold text-cyan-400 tracking-[0.2em]">AI PLATFORM</span>
             </div>
@@ -409,7 +409,7 @@ export default function LandingPage() {
                 <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-500 to-indigo-600 flex items-center justify-center">
                   <Globe className="w-5 h-5 text-white" />
                 </div>
-                <span className="text-xl font-black tracking-tighter text-white">SOCIALBRIDGE AI</span>
+                <span className="text-xl font-black tracking-tighter text-white">CONCORD</span>
               </div>
               <p className="text-slate-500 max-w-sm mb-8 leading-relaxed">
                 The world's first AI-powered platform designed specifically for civic engagement and cross-sector social collaboration.
@@ -445,7 +445,7 @@ export default function LandingPage() {
           </div>
           
           <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-bold text-slate-600 tracking-widest uppercase">
-            <p>© 2026 SOCIALBRIDGE AI. ALL RIGHTS RESERVED.</p>
+            <p>© 2026 CONCORD. ALL RIGHTS RESERVED.</p>
             <div className="flex items-center gap-1">
               MADE WITH <Heart className="w-4 h-4 text-rose-500" /> FOR THE FUTURE
             </div>

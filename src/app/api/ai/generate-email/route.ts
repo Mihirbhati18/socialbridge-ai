@@ -1,4 +1,4 @@
-﻿import { GoogleGenerativeAI } from '@google/generative-ai';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 import { NextResponse } from 'next/server';
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
@@ -18,7 +18,7 @@ Dear ${recipient} Team,
 
 I hope this email finds you well. 
 
-I am reaching out from SocialBridge AI because we are organizing an impactful initiative and your organization was specifically recommended by our AI Partnership Engine as the ideal partner due to your outstanding track record in this area.
+I am reaching out from Concord because we are organizing an impactful initiative and your organization was specifically recommended by our AI Partnership Engine as the ideal partner due to your outstanding track record in this area.
 
 Context:
 ${body.eventDescription || body.projectContext || 'We are organizing a community-driven event and need reliable partners to ensure its success.'}
@@ -31,7 +31,7 @@ Looking forward to your response.
 
 Warm regards,
 [Your Name]
-SocialBridge Organizer`;
+Concord Organizer`;
 
       return NextResponse.json({ email: fallbackEmail });
     }
@@ -108,7 +108,7 @@ Your email body here (can include newlines)`;
     console.error('Error generating email:', error);
     
     // Provide fallback even on error
-    const fallbackEmail = `Subject: Proposal for Collaboration\n\nDear Team,\n\nWe would love to partner with you on our upcoming initiative. Our AI engine identified your organization as a top match based on your recent activities.\n\nPlease let us know if you're open to a discussion.\n\nBest,\nSocialBridge Team`;
+    const fallbackEmail = `Subject: Proposal for Collaboration\n\nDear Team,\n\nWe would love to partner with you on our upcoming initiative. Our AI engine identified your organization as a top match based on your recent activities.\n\nPlease let us know if you're open to a discussion.\n\nBest,\nConcord Team`;
     
     return NextResponse.json({ email: fallbackEmail });
   }

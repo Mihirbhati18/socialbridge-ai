@@ -13,14 +13,14 @@ export const transporter = nodemailer.createTransport({
 export async function sendOTPEmail(email: string, code: string) {
   if (process.env.SMTP_USER && process.env.SMTP_PASS && process.env.SMTP_HOST) {
     await transporter.sendMail({
-      from: `"SocialBridge" <${process.env.SMTP_USER}>`,
+      from: `"Concord" <${process.env.SMTP_USER}>`,
       to: email,
-      subject: 'Your Verification Code - SocialBridge',
+      subject: 'Your Verification Code - Concord',
       text: `Your verification code is: ${code}. It will expire in 10 minutes.`,
       html: `
         <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px;">
           <h2 style="color: #0f172a;">Verification Code</h2>
-          <p style="color: #475569;">Use the following code to sign in to SocialBridge:</p>
+          <p style="color: #475569;">Use the following code to sign in to Concord:</p>
           <div style="background-color: #f1f5f9; padding: 20px; text-align: center; border-radius: 8px; margin: 20px 0;">
             <span style="font-size: 32px; font-weight: bold; letter-spacing: 5px; color: #020617;">${code}</span>
           </div>

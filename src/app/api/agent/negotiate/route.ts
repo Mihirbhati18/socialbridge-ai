@@ -1,7 +1,7 @@
-﻿import { NextRequest } from 'next/server';
+import { NextRequest } from 'next/server';
 import { prisma } from '@/backend/lib/prisma';
 
-// â”€â”€ AI Call Helper (with retry + delay) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── AI Call Helper (with retry + delay) ───────────────────────────────
 
 const delay = (ms: number) => new Promise(r => setTimeout(r, ms));
 
@@ -52,15 +52,15 @@ async function callAI(messages: any[], temperature = 0.3, maxTokens = 2000): Pro
   }
 }
 
-// â”€â”€ Tool Implementations â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-// Tools use ZERO extra AI calls â€” they use deterministic logic only.
+// ── Tool Implementations ──────────────────────────────────────────────
+// Tools use ZERO extra AI calls — they use deterministic logic only.
 // Only the main agent loop calls the AI.
 
 // Real vendor data sourced by the AI is stored here during the session
 const vendorCache = new Map<string, any>();
 
 async function searchRealVendors(serviceType: string, city: string, requirement: string) {
-  // This is the ONE tool that needs AI â€” it asks the LLM to use its knowledge
+  // This is the ONE tool that needs AI — it asks the LLM to use its knowledge
   // of Google Maps/Justdial to find real businesses
   const searchPrompt = `You are a local business directory expert for ${city}, India. 
 Find 4 REAL vendors/businesses for: ${serviceType} - ${requirement}
@@ -92,7 +92,7 @@ Use realistic business names, ratings (3.5-4.8), and pricing for ${city}. Prices
 }
 
 function getVendorQuote(vendorName: string, pricePerUnit: number, quantity: number) {
-  // Pure math â€” no AI call needed
+  // Pure math — no AI call needed
   const markup = 1 + (Math.random() * 0.1); // 0-10% situational markup
   const totalQuote = Math.round(pricePerUnit * quantity * markup);
   const ngoDiscount = Math.floor(5 + Math.random() * 10); // 5-15% initial discount
@@ -104,12 +104,12 @@ function getVendorQuote(vendorName: string, pricePerUnit: number, quantity: numb
     ngoDiscount: `${ngoDiscount}%`,
     discountedQuote: discounted,
     perUnitRate: pricePerUnit,
-    message: `Namaste! For ${quantity} units, our quote is â‚¹${totalQuote.toLocaleString('en-IN')}. For your social cause, we offer ${ngoDiscount}% discount = â‚¹${discounted.toLocaleString('en-IN')}. Please confirm to proceed.`,
+    message: `Namaste! For ${quantity} units, our quote is ₹${totalQuote.toLocaleString('en-IN')}. For your social cause, we offer ${ngoDiscount}% discount = ₹${discounted.toLocaleString('en-IN')}. Please confirm to proceed.`,
   };
 }
 
 function negotiatePrice(vendorName: string, currentOffer: number, proposedAmount: number, pricePerUnit: number, quantity: number) {
-  // Pure math negotiation â€” no AI call
+  // Pure math negotiation — no AI call
   const costFloor = pricePerUnit * quantity * 0.65; // 35% is vendor's absolute minimum
   const maxDiscountPrice = pricePerUnit * quantity * 0.75; // 25% max discount for NGOs
 
@@ -118,7 +118,7 @@ function negotiatePrice(vendorName: string, currentOffer: number, proposedAmount
       accepted: true,
       vendorName,
       finalAmount: proposedAmount,
-      message: `Done deal! â‚¹${proposedAmount.toLocaleString('en-IN')} for the social cause. We are happy to support. Please confirm booking.`,
+      message: `Done deal! ₹${proposedAmount.toLocaleString('en-IN')} for the social cause. We are happy to support. Please confirm booking.`,
     };
   } else if (proposedAmount >= costFloor) {
     const counter = Math.round((proposedAmount + maxDiscountPrice) / 2);
@@ -126,14 +126,14 @@ function negotiatePrice(vendorName: string, currentOffer: number, proposedAmount
       accepted: false,
       vendorName,
       counterAmount: counter,
-      message: `â‚¹${proposedAmount.toLocaleString('en-IN')} is too low for us. Best we can do is â‚¹${counter.toLocaleString('en-IN')}. This includes our maximum NGO discount.`,
+      message: `₹${proposedAmount.toLocaleString('en-IN')} is too low for us. Best we can do is ₹${counter.toLocaleString('en-IN')}. This includes our maximum NGO discount.`,
     };
   } else {
     return {
       accepted: false,
       vendorName,
       counterAmount: Math.round(maxDiscountPrice),
-      message: `Sorry, â‚¹${proposedAmount.toLocaleString('en-IN')} is below our cost price. Our final offer is â‚¹${Math.round(maxDiscountPrice).toLocaleString('en-IN')} with maximum discount.`,
+      message: `Sorry, ₹${proposedAmount.toLocaleString('en-IN')} is below our cost price. Our final offer is ₹${Math.round(maxDiscountPrice).toLocaleString('en-IN')} with maximum discount.`,
     };
   }
 }
@@ -147,11 +147,11 @@ function generateContract(vendorName: string, vendorAddress: string, vendorPhone
     finalAmount,
     requirement,
     status: 'READY_TO_CONFIRM',
-    nextSteps: `Contact ${vendorName} at ${vendorPhone} to confirm. Mention SocialBridge reference.`,
+    nextSteps: `Contact ${vendorName} at ${vendorPhone} to confirm. Mention Concord reference.`,
   };
 }
 
-// â”€â”€ JSON Extraction Helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── JSON Extraction Helpers ───────────────────────────────────────────
 
 function extractFirstJSON(text: string): string {
   const start = text.indexOf('{');
@@ -164,7 +164,7 @@ function extractFirstJSON(text: string): string {
   return '';
 }
 
-// â”€â”€ Agent Response Parser â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Agent Response Parser ─────────────────────────────────────────────
 
 function parseAgentResponse(text: string) {
   const thoughtMatch = text.match(/THOUGHT:\s*([\s\S]*?)(?=ACTION:|FINAL_ANSWER:|$)/i);
@@ -186,7 +186,7 @@ function parseAgentResponse(text: string) {
   };
 }
 
-// â”€â”€ Tool Registry â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Tool Registry ──────────────────────────────────────────────────────
 const TOOLS_DESCRIPTION = `
 You have these tools:
 
@@ -206,7 +206,7 @@ You have these tools:
    - Finalizes the deal. Only call when price is agreed.
 `;
 
-// â”€â”€ Main Agent Endpoint â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Main Agent Endpoint ───────────────────────────────────────────────
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
@@ -242,7 +242,7 @@ export async function POST(req: NextRequest) {
       };
 
       try {
-        const systemPrompt = `You are an autonomous AI vendor negotiation agent for SocialBridge (India). Find REAL vendors and negotiate the best deal.
+        const systemPrompt = `You are an autonomous AI vendor negotiation agent for Concord (India). Find REAL vendors and negotiate the best deal.
 
 ${TOOLS_DESCRIPTION}
 
@@ -262,16 +262,16 @@ When done:
 THOUGHT: [summary]
 FINAL_ANSWER: [JSON: {success, summary, vendorName, vendorPhone, vendorAddress, finalAmount}]
 
-Context: Need ${requirement} | Type: ${serviceType} | Qty: ${userQty} | Budget: â‚¹${parseFloat(budget).toLocaleString('en-IN')} | City: ${userCity}
+Context: Need ${requirement} | Type: ${serviceType} | Qty: ${userQty} | Budget: ₹${parseFloat(budget).toLocaleString('en-IN')} | City: ${userCity}
 
 Start by searching for vendors.`;
 
         const messages: any[] = [
           { role: 'system', content: systemPrompt },
-          { role: 'user', content: `Find real vendors in ${userCity} for: ${requirement}. Budget: â‚¹${parseFloat(budget).toLocaleString('en-IN')}.` },
+          { role: 'user', content: `Find real vendors in ${userCity} for: ${requirement}. Budget: ₹${parseFloat(budget).toLocaleString('en-IN')}.` },
         ];
 
-        await logStep('SYSTEM', `ðŸš€ Agent started. Searching real vendors in ${userCity} for: ${requirement} (Budget: â‚¹${parseFloat(budget).toLocaleString('en-IN')})`);
+        await logStep('SYSTEM', `🚀 Agent started. Searching real vendors in ${userCity} for: ${requirement} (Budget: ₹${parseFloat(budget).toLocaleString('en-IN')})`);
 
         const maxIterations = 10;
         let iteration = 0;
@@ -286,7 +286,7 @@ Start by searching for vendors.`;
           const parsed = parseAgentResponse(aiResponse);
 
           if (parsed.thought) {
-            await logStep('THOUGHT', `ðŸ’­ ${parsed.thought}`);
+            await logStep('THOUGHT', `💭 ${parsed.thought}`);
           }
 
           // Final answer
@@ -307,7 +307,7 @@ Start by searching for vendors.`;
               });
             }
 
-            await logStep('FINAL', `âœ… ${result.summary || 'Negotiation complete.'}`);
+            await logStep('FINAL', `✅ ${result.summary || 'Negotiation complete.'}`);
             send({ type: 'COMPLETE', result, negotiationId: negotiation.id });
             break;
           }
@@ -323,7 +323,7 @@ Start by searching for vendors.`;
             }
 
             const actionName = parsed.action.toLowerCase().trim();
-            const toolLabel = actionName === 'search_real_vendors' ? 'ðŸŒ Searching Google Maps & directories...' : `ðŸ”§ ${parsed.action}`;
+            const toolLabel = actionName === 'search_real_vendors' ? '🌐 Searching Google Maps & directories...' : `🔧 ${parsed.action}`;
             await logStep('TOOL_CALL', `${toolLabel} ${JSON.stringify(toolInput)}`);
 
             let toolResult: any;
@@ -369,12 +369,12 @@ Start by searching for vendors.`;
             }
 
             const preview = JSON.stringify(toolResult);
-            await logStep('TOOL_RESULT', `ðŸ“‹ ${preview.length > 600 ? preview.slice(0, 600) + '...' : preview}`);
+            await logStep('TOOL_RESULT', `📋 ${preview.length > 600 ? preview.slice(0, 600) + '...' : preview}`);
 
             messages.push({ role: 'assistant', content: aiResponse });
             messages.push({
               role: 'user',
-              content: `Tool result:\n${JSON.stringify(toolResult, null, 2)}\n\nBudget: â‚¹${parseFloat(budget).toLocaleString('en-IN')}. Continue.`,
+              content: `Tool result:\n${JSON.stringify(toolResult, null, 2)}\n\nBudget: ₹${parseFloat(budget).toLocaleString('en-IN')}. Continue.`,
             });
           } else {
             messages.push({ role: 'assistant', content: aiResponse });
@@ -383,13 +383,13 @@ Start by searching for vendors.`;
         }
 
         if (iteration >= maxIterations) {
-          await logStep('FINAL', 'âš ï¸ Max iterations reached.');
+          await logStep('FINAL', '⚠️ Max iterations reached.');
           await prisma.agentNegotiation.update({ where: { id: negotiation.id }, data: { status: 'FAILED' } });
           send({ type: 'COMPLETE', result: { success: false, summary: 'Max iterations' }, negotiationId: negotiation.id });
         }
       } catch (error: any) {
         console.error('Agent error:', error);
-        await logStep('FINAL', `âŒ ${error.message}`);
+        await logStep('FINAL', `❌ ${error.message}`);
         send({ type: 'ERROR', error: error.message });
       } finally {
         controller.close();

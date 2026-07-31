@@ -1,6 +1,6 @@
-# SocialBridge AI
+# Concord
 
-SocialBridge AI is an intelligent platform designed to connect NGOs, government bodies, local communities, and verified vendors. It streamlines collaboration, discovers high-potential partnerships using AI, and facilitates seamless execution of social impact projects.
+Concord is an intelligent platform designed to connect NGOs, government bodies, local communities, and verified vendors. It streamlines collaboration, discovers high-potential partnerships using AI, and facilitates seamless execution of social impact projects.
 
 ## Features
 - **AI Partnership Engine**: Uses AI (Groq/Gemini) to automatically analyze organizations and recommend the perfect matches for your project based on success rate, location, and domain expertise.

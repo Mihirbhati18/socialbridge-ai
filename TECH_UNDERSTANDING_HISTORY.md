@@ -1,4 +1,4 @@
-# SocialBridge AI: Tech, Understanding, and History
+# Concord: Tech, Understanding, and History
 
 > **Purpose:** This document tracks the complete history of features we built, the technical logic behind them, the challenges we faced, and how we solved them. Use this to easily explain the engineering journey to hackathon judges.
 
