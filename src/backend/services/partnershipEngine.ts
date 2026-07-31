@@ -182,7 +182,7 @@ export async function getRecommendations(requestId: string): Promise<PartnerReco
   if (recommendations.length === 0) return [];
 
   try {
-    const prompt = `You are the SocialBridge AI Partnership Engine. For each partner, write a compelling 2-sentence explanation of why they are a great match for a collaboration request titled "${request.title}" in category '${request.category}'. Be specific about their strengths.
+    const prompt = `You are the Concord Partnership Engine. For each partner, write a compelling 2-sentence explanation of why they are a great match for a collaboration request titled "${request.title}" in category '${request.category}'. Be specific about their strengths.
         Candidates: ${JSON.stringify(
           recommendations.map((r) => ({
             id: r.organization.id,

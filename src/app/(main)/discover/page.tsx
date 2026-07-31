@@ -128,7 +128,7 @@ export default function DiscoverPage() {
     setIsSending(true);
     
     // Extract subject from draft content if possible
-    let subject = `Partnership Outreach from ${outreachTarget?.name || 'SocialBridge'}`;
+    let subject = `Partnership Outreach from ${outreachTarget?.name || 'Concord'}`;
     let body = draftEmailContent;
     
     const subjectMatch = draftEmailContent.match(/^Subject:\s*(.*)\n\n/i);
@@ -354,7 +354,7 @@ export default function DiscoverPage() {
           ) : isDrafting ? (
             <div className="flex flex-col items-center justify-center py-12 space-y-4 text-indigo-500">
               <Loader2 className="h-8 w-8 animate-spin" />
-              <p className="font-medium animate-pulse text-sm">SocialBridge AI is drafting the perfect pitch...</p>
+              <p className="font-medium animate-pulse text-sm">Concord is drafting the perfect pitch...</p>
             </div>
           ) : (
             <div className="space-y-4">

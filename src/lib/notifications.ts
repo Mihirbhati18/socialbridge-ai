@@ -48,7 +48,7 @@ export async function sendNotification({
             to: email,
             subject: title,
             body: message,
-            fromName: 'SocialBridge AI'
+            fromName: 'Concord'
           })
         });
       } catch (err) {

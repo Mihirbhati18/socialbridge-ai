@@ -56,7 +56,7 @@ export function Sidebar() {
         <div className="flex items-center gap-2 p-6 h-20 border-b border-white/5">
           <Link href="/" className="flex items-center gap-2">
             <h1 className="text-2xl font-bold bg-gradient-to-r from-violet-400 to-primary bg-clip-text text-transparent">
-              SocialBridge
+              Concord
             </h1>
             <span className="px-2 py-0.5 text-xs font-bold bg-primary/20 text-primary rounded-md border border-primary/30">
               AI

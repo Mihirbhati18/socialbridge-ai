@@ -464,7 +464,7 @@ export default function MunicipalityDashboard() {
                 <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-cyan-500 to-indigo-600 flex items-center justify-center shadow-lg">
                     <Globe className="w-5 h-5 text-white" />
                 </div>
-                <span className="text-sm font-black text-white tracking-tighter">SOCIALBRIDGE AI • MUNICIPAL SYSTEMS</span>
+                <span className="text-sm font-black text-white tracking-tighter">CONCORD • MUNICIPAL SYSTEMS</span>
             </div>
             
             <div className="flex flex-wrap justify-center gap-8 text-[10px] font-black text-slate-600 tracking-[0.2em] uppercase">
