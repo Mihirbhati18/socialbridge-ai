@@ -23,8 +23,9 @@ To run this project locally or load it into Claude/Cursor for further developmen
 ### 1. Install Dependencies
 Make sure you have Node.js installed, then run:
 ```bash
-npm install
+npm install --legacy-peer-deps
 ```
+*(Note: `--legacy-peer-deps` is required due to a conflict between Next.js 15 / React 19 and react-leaflet).*
 
 ### 2. Environment Variables
 Copy the example environment file:
@@ -34,6 +35,10 @@ cp .env.example .env
 Open `.env` and fill in the required API keys:
 - **`GROQ_API_KEY`**: Highly recommended. Get a free API key at [console.groq.com](https://console.groq.com/keys).
 - **`GEMINI_API_KEY`**: Used as a fallback. Get a free API key at [aistudio.google.com](https://aistudio.google.com/).
+- **`NEXTAUTH_SECRET`**: A random string for securing authentication sessions (you can generate one with `openssl rand -base64 32`).
+- **`NEXTAUTH_URL`**: `http://localhost:3000`
+- **`GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET`**: (Optional) For Google OAuth login.
+- **`GITHUB_ID` / `GITHUB_SECRET`**: (Optional) For GitHub OAuth login.
 
 ### 3. Database Setup
 The repository comes with a pre-seeded SQLite database (`prisma/dev.db`) so you can start right away without setting up Postgres. 
