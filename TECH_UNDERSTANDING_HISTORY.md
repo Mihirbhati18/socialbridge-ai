@@ -69,3 +69,63 @@ However, Next.js App Router has very strict boundaries between **Server Componen
 
 **The Solution:** We meticulously refactored the component tree. We identified components that didn't actually need client-side hooks (like `useState`) and stripped the `'use client'` directives from them, converting them into pure Server Components. For components that *did* need interactivity (like the Sidebar), we used the client-side `useSession` hook from NextAuth and wrapped the entire application in a `<SessionProvider>`. 
 This allowed us to achieve dynamic, authenticated data fetching without sacrificing the security or performance of SSR (Server-Side Rendering).
+
+---
+
+## Part 4: Mihir's Work — City Council Multi-Agent Debate (Agentic AI)
+
+### 1. What We Did
+We built a **Multi-Agent AI System** where two distinct AI personas autonomously debate each other over a civic issue. This is not a chatbot — it's two independent agents with opposing goals that argue, counter each other's points, and ultimately reach a compromised resolution. This is the most technically advanced "Agentic" feature in the entire project.
+
+When a citizen views a civic issue (e.g., "Massive Pothole on MG Road"), they can trigger a **"City Council Simulation"**. Two AI agents are spawned:
+- 🛡️ **The Budget Director** — A fiscally conservative municipal officer. Their goal is to minimize cost, propose phased rollouts, and protect taxpayer money.
+- 🧡 **The Citizen Advocate** — A passionate people's representative. Their goal is rapid action, quality solutions, and highlighting human impact (safety hazards, health risks, economic losses).
+
+They debate for **3 rounds**, directly addressing each other's arguments. After the debate, a neutral **Moderator AI** reads the full transcript and synthesizes a balanced **Final Resolution** with specific budget allocations and timelines.
+
+### 2. How It Works (The Architecture)
+
+The system uses **Server-Sent Events (SSE)** for real-time streaming, similar to the vendor negotiation agent. Here's the internal flow:
+
+**Step 1: Context Injection**
+When the user clicks "Start Debate", the frontend sends the `issueId` to the backend. The backend fetches the full civic issue data (title, description, category, location, priority, vote count) from the database and injects it into both agents' system prompts as context.
+
+**Step 2: Independent Conversation Histories**
+Each agent maintains its **own separate conversation history** (`budgetMessages[]` and `advocateMessages[]`). This is critical — if they shared a single history, the AI would blur the personalities. By keeping them isolated, each agent "remembers" only what it said and what the other agent said to it, creating genuinely independent reasoning.
+
+**Step 3: The Debate Loop (3 Rounds)**
+```
+For each round (1 to 3):
+  1. Budget Director receives the issue context (round 1) or the Advocate's last argument.
+  2. Budget Director generates its argument via callAI().
+  3. The argument is streamed to the frontend in real-time via SSE.
+  4. Budget Director's argument is injected into the Advocate's conversation history.
+  5. Citizen Advocate generates its counter-argument via callAI().
+  6. The counter-argument is streamed to the frontend.
+  7. Advocate's argument is injected back into Budget Director's history for the next round.
+```
+
+In the final round, both agents are prompted to "make your strongest closing argument and suggest a compromise", which steers the debate toward convergence.
+
+**Step 4: Resolution Synthesis**
+After all 3 rounds, a third AI call is made with a **Moderator** system prompt. The moderator receives the full debate transcript and outputs a structured resolution with:
+- Specific action items (e.g., "Deploy emergency patching crew within 48 hours")
+- Budget allocations in INR (e.g., "Allocate ₹2,50,000 for permanent road resurfacing")
+- Timelines for each action
+
+**Step 5: Persistence**
+The final resolution is saved to the database (`CivicIssue.councilResolution`). If a user revisits the issue page, the resolution is displayed instantly without re-running the debate.
+
+### 3. The Frontend Experience
+The UI is a chat-style interface with:
+- **Color-coded messages** — Blue bubbles for Budget Director, Orange bubbles for Citizen Advocate.
+- **Animated typing indicators** — Bouncing dots appear while an agent is "thinking", making it feel like a live conversation.
+- **Round indicators** — Each message shows which debate round it belongs to (R1, R2, R3).
+- **Final Resolution Card** — An emerald-green styled card that displays the synthesized action plan.
+
+### 4. Why This Is Technically Impressive
+- **True Multi-Agent Architecture:** Two independent AI instances with separate memory, separate system prompts, and opposing objectives.
+- **Cross-Agent Communication:** Agent A's output becomes Agent B's input, and vice versa, creating a genuine feedback loop.
+- **Convergence Design:** The prompt engineering deliberately steers the agents toward compromise in the final round, mimicking real democratic debate.
+- **Real-Time Streaming:** All 6 debate messages + the resolution are streamed live via SSE, not batched. The user watches the debate unfold in real-time.
+- **Zero Hallucination on Numbers:** The Moderator is constrained to output specific ₹ amounts and timelines, grounding the resolution in actionable data.

@@ -251,6 +251,7 @@ model CivicIssue {
   voteCount   Int      @default(0) // Unique citizens confirming the issue
   slaDeadline DateTime?
   isEscalated Boolean  @default(false)
+  councilResolution String? // Stores the final multi-agent debate resolution
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
