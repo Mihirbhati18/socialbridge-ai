@@ -17,7 +17,7 @@ export async function POST(
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
-    const issueId = params.id;
+    const issueId = (await params).id;
 
     const subscription = await prisma.issueSubscription.upsert({
       where: {
