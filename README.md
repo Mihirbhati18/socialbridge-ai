@@ -3,14 +3,15 @@
 Concord is an intelligent platform designed to connect NGOs, government bodies, local communities, and verified vendors. It streamlines collaboration, discovers high-potential partnerships using AI, and facilitates seamless execution of social impact projects.
 
 ## Features
-- **AI Partnership Engine**: Uses AI (Groq/Gemini) to automatically analyze organizations and recommend the perfect matches for your project based on success rate, location, and domain expertise.
+- **AI Partnership Engine**: Uses AI (Groq/Gemini) to automatically analyze organizations and recommend the best-fit partners for a project based on success rate, location, and domain expertise.
 - **AI Creator Outreach**: Connect directly with project creators. The AI will draft highly personalized pitches for general partnerships, venue requests, funding, or volunteers based on the context of their post.
 - **Civic Issue Tracking**: Interactive maps to track and report civic issues in local communities.
+- **City Council Debate**: A multi-agent simulation where AI agents with different council roles debate a reported civic issue before a decision.
 - **Intelligent Collaboration Dashboard**: Manage all your active partnerships, documents, tasks, and communications in one place.
 
 ## Tech Stack
 - **Framework**: Next.js 15 (App Router)
-- **Styling**: Tailwind CSS & generic UI components
+- **Styling**: Tailwind CSS
 - **Database**: Prisma ORM with SQLite (pre-seeded with dummy data for local testing)
 - **AI Integration**: Groq (Llama 3) & Google Gemini APIs
 
@@ -18,7 +19,7 @@ Concord is an intelligent platform designed to connect NGOs, government bodies, 
 
 ## Local Development Setup
 
-To run this project locally or load it into Claude/Cursor for further development, follow these steps:
+To run this project locally:
 
 ### 1. Install Dependencies
 Make sure you have Node.js installed, then run:
@@ -70,9 +71,3 @@ Open [http://localhost:3000](http://localhost:3000) in your browser to view the 
 - `src/services/` - Core business logic (e.g., the `partnershipEngine.ts` that powers AI recommendations)
 - `src/lib/` - Utilities for Prisma and AI model initialization
 - `prisma/` - Database schema, seed script, and local SQLite DB
-
-## Claude / AI Assistant Setup
-If you are passing this repository to Claude, Cursor, or another AI coding assistant:
-1. Provide the AI with this `README.md` to establish context.
-2. The AI can find the core database schema in `prisma/schema.prisma`.
-3. The main AI capabilities (Search, Email Drafting, Recommendations) are located in `src/app/api/ai/` and `src/services/partnershipEngine.ts`.
